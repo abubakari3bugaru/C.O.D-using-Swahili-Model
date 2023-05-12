@@ -1,0 +1,50 @@
+{% extends 'register.html' %}
+{% load static %}
+    
+    
+    {% block content %}
+  
+    <div class="card p-3">
+        {% if messages %}
+        <ul class="messages bg-danger text-light list-unstyled  text-center">
+      {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    <script>
+      setTimeout(function() {
+        var messages = document.getElementsByClassName('messages');
+        for (var i = 0; i < messages.length; i++) {
+          messages[i].style.display = 'none';
+        }
+      }, 5000);
+    </script>
+
+      <div class="m-3 mb-2">
+        <img src="{% static '/images/logo.png' %}" alt="Logo" style="width:100px; height:100px;">
+      </div>
+      <div class="card-title">
+        
+        <h4>Please Login</h4>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <input type="text" class="form-control" id="usernameField" name="username" placeholder="username"><br>
+          <input type="password" class="form-control" id="passwordField"  name="password" placeholder="Password">
+          <small class="float-right ">Show</small>
+      </div>
+        <!-- <div class="checkbox mb-3">
+          <label>
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+        </div> -->
+      </div>
+        <input type="submit" value="Login" class="btn btn-block btn-primary">
+    </div>
+    
+    <p class="mt-5 mb-3 text-muted">&copy; 2023</p>
+
+    <script src="{% static 'js/register.js' %}"></script>
+    {% endblock %}
+

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Make a Prediction</title>
+</head>
+<body>
+	<h1>Make a Prediction</h1>
+	<form method="POST" method="predict">
+		{% csrf_token %}
+			<label for="inputs">Inputs:</label>
+			<input type="text" name="inputs" id="inputs" required>
+		<button type="submit">Predict</button>
+	</form>
+	{% if prediction %}
+		<p>Prediction: {{ prediction }}</p>
+	{% endif %}
+</body>
+</html>
