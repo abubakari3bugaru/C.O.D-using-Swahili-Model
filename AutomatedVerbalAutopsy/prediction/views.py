@@ -1,38 +1,30 @@
-from django.shortcuts import render
-from django.http import HttpResponse
 
-# Create your views here.
-
-from django.shortcuts import render
-# from .models import PredictionModel
+from django.shortcuts import render, redirect
+from django.conf import settings
 import pickle
-import sklearn
 
-# Create your views here.
+# Define Constant
+MODELFILE = settings.MODEL_DIR + '/diseaseModel.pkl'
+
 def index(request):
-    return render(request, 'index.html')
-
-def predict(request):
     if request.method == 'POST':
-        # Get user inputs
+        #Get user inputs
         inputs = request.POST.get('inputs')
-        
+
         # Check if inputs is a string
         if isinstance(inputs, str):
-            # Convert inputs to list of strings
+            # Convert inputs as a list
             inputs = [inputs]
-
-        # Load the saved data ML model
-        with open('Models/diseaseModel.pkl', 'rb') as f:
+        # Load the ML model
+        with open(MODELFILE, 'rb') as f:
             model = pickle.load(f)
 
-        # Generate predictioins using the model and user inputs
+        # Generate prediction using the model and user inputs
         prediction = model.predict(inputs)
+
 
         # Pass the prediction to the template
         context = {'prediction': prediction}
-        return render(request, 'prediction.html', context)
-    else:
-        return render(request, 'prediction.html')
-def index(request):
-    return HttpResponse("Hello, Prediction")
+        
+        return render(request, 'prediction/index.html', context)
+    return render(request, 'prediction/index.html')

@@ -5,9 +5,9 @@
 </head>
 <body>
 	<h1>Make a Prediction</h1>
-	<form method="POST" method="predict">
+	<form method="POST" action="{% url 'prediction:index' %}">
 		{% csrf_token %}
-			<label for="inputs">Inputs:</label>
+			<label for="inputs">Input:</label>
 			<input type="text" name="inputs" id="inputs" required>
 		<button type="submit">Predict</button>
 	</form>
