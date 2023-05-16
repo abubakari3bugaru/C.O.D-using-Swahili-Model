@@ -1,8 +1,5 @@
+
 from django.contrib import admin
-from .models import Shuhuda, Mhanga, Uchunguzi
+from .models import COD
 
-# Register your models here.
-
-admin.site.register(Shuhuda)
-admin.site.register(Mhanga)
-admin.site.register(Uchunguzi)
+admin.site.register(COD)
