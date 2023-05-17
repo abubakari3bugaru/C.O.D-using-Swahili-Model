@@ -12,22 +12,6 @@ from django.shortcuts import render, redirect
 
 
 @login_required
-# def shuhuda(request, message=None):
-#     username = request.user.username  # Get the authenticated user's username
-#     if request.method == 'POST':
-#         form = SubmitForm(request.POST)
-#         if form.is_valid():
-#             #Form data is valid, process it here
-#             form_data = Shuhuda(
-              
-#             # Save the form data to the database
-#             form_data.save()
-
-#             return render(request, 'form1.html')  # Render a success page after form submission
-#     else:
-#         form = SubmitForm()
-#     return render(request, 'form.html', {'username': username, 'message': message, 'form': form})
-
 def cod(request, message=None):
     username = request.user.username  # Get the authenticated user's username
     if request.method == 'POST':
@@ -54,7 +38,7 @@ def cod(request, message=None):
                 maelezo=request.POST['maelezo']
             )
             form_COD.save()
-            return redirect('questionnaire:maelezo')
+            return redirect('prediction:predict')
     
     return render(request, 'questionnaire/form.html', {'username': username, 'message': message})
 
