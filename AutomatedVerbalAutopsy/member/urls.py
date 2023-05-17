@@ -3,6 +3,7 @@ from. views import Login_view,UsernameValidationView,LogoutView
 from django.urls import path
 from django.views.decorators.csrf import csrf_exempt
 
+app_name = 'member'
 
 urlpatterns = [
     path('login/', Login_view.as_view(), name='login'),

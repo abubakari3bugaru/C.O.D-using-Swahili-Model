@@ -1,12 +1,12 @@
-{% extends 'main.html'%}
+{% extends 'questionnaire/main.html'%}
 {% block title %} Home {% endblock%} 
 {% block content%}
    
 <!-- Taarifa za Fomu -->
-<!-- {% url 'submit_form' %} -->
+<!-- {% url 'questionnaire:submit_form' %} -->
 
 
-<form action="{% url 'submit_form' %}" method="POST">
+<form action="{% url 'questionnaire:submit_form' %}" method="POST">
     <div class="col-md-9 mb-3 ps-3 pt-3">
         <div class="row mb-5">
 

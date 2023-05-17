@@ -15,7 +15,7 @@
 
     <!-- Bootstrap core CSS -->
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/boostrap_min.css' %}">
+    <link rel="stylesheet" href="{% static 'questionnaire/css/boostrap_min.css' %}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -34,14 +34,14 @@
 
 
      {% load static %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+     <link rel="stylesheet" href="{% static 'questionnaire/css/style.css' %}">
 
   
 
     
     <!-- Custom styles for this template -->
     {% load static %}
-<link rel="stylesheet" href="{% static 'css/main.css' %}">
+<link rel="stylesheet" href="{% static 'questionnaire/css/main.css' %}">
 
 
   </head>
@@ -61,7 +61,7 @@
         <a class="nav-link text-light  fs-5 px-3" href="#"><i class="fas fa-user-circle"></i>  {{ username }}</a>
       </div>
         <div class="col-sm-6">
-          <a  class="nav-link  text-light fs-5 " href="{% url 'logout' %}"><u>Sign Out</u></a>
+          <a  class="nav-link  text-light fs-5 " href="{% url 'member:logout' %}"><u>Sign Out</u></a>
         </div>
       </div>
        {% endif %}
