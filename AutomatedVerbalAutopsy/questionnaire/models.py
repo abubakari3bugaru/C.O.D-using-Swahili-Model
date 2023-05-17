@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 
 
-class Shuhuda(models.Model):
+class COD(models.Model):
     Uhusiano_marehemu = (
         ('Baba', 'Baba'),
         ('Mama', 'Mama'),
@@ -23,12 +23,6 @@ class Shuhuda(models.Model):
     simu = models.IntegerField()
     uhusiano = models.CharField(max_length=255, choices=Uhusiano_marehemu)
     uhusiano_kipindi_kifo = models.CharField(max_length=255, choices=Uhusiano_kifo)
-    
-    def __str__(self):
-        return self.shahidi
-    
-
-class Mhanga(models.Model):
     Ndoa = (
         ('ndoa', 'ndoa'),
         ('hajafunga ndoa', 'hajafunga ndoa'),
@@ -47,7 +41,6 @@ class Mhanga(models.Model):
         ('mume','mwanaume'),
         ('mke','mwanamke')
     )
-    # shuhuda = models.ForeignKey(Shuhuda, on_delete=models.CASCADE, null=True)
     jina_kwanza = models.CharField(max_length=255 )
     jina_pili = models.CharField(max_length=255)
     jina_mwisho = models.CharField(max_length=255)
@@ -57,31 +50,12 @@ class Mhanga(models.Model):
     kufa = models.DateField(default=timezone.now)
     mahali = models.CharField(max_length=255, choices=Mahali)
     maelezo = models.TextField()
-    sababu1 = models.CharField(max_length=255)
-    sababu2 = models.CharField(max_length=255)
     
     def __str__(self):
-        return self.jina_kwanza
+        return self.first_name
+    
 
 
 
-class Uchunguzi(models.Model):
-    MAGONJWA = [
-        ('moyo', 'Ugonjwa wa Moyo'),
-        ('kisukari', 'Non-fiction'),
-        ('presha', 'Mystery'),
-        ('saratani', 'Thriller'),
-        ('ajali', 'Ajali'),
-        ('pumu', 'Pumu'),
-        ('vvu', 'VVU'),
-        ('kifafa', 'Kifafa'),
-        ('kifua kikuu', 'Kifua Kikuu'),
-        ('sijui', 'Sijui'),
-    ]
 
-    mhanga = models.ForeignKey(Mhanga, on_delete=models.CASCADE)
-    shahidi = models.ForeignKey(Shuhuda, on_delete=models.CASCADE)
-    magonjwa = models.CharField(choices=MAGONJWA, max_length=20, blank=True)
-    mengineyo = models.TextField()
-    def __str__(self):
-        return self.magonjwa
+
