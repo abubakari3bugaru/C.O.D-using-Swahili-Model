@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'member.apps.MemberConfig',
     'prediction.apps.PredictionConfig',
     'questionnaire.apps.QuestionnaireConfig',
     'django.contrib.admin',

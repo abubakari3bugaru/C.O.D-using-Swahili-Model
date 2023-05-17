@@ -54,9 +54,9 @@ def cod(request, message=None):
                 maelezo=request.POST['maelezo']
             )
             form_COD.save()
-            return redirect('maelezo')
+            return redirect('questionnaire:maelezo')
     
-    return render(request, 'form.html', {'username': username, 'message': message})
+    return render(request, 'questionnaire/form.html', {'username': username, 'message': message})
 
 
 #function ya kuingiza data to database kwa mhanga
@@ -67,5 +67,5 @@ def maelezo(request,message=None):
     # row_count = all_maelezo.count()
     
     username = request.user.username 
-    return render(request, 'success.html',{'all_maelezo': all_maelezo, 'username': username,})
+    return render(request, 'questionnaire/success.html',{'all_maelezo': all_maelezo, 'username': username,})
 
