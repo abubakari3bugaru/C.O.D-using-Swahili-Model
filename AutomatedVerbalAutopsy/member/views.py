@@ -46,33 +46,6 @@ class LogoutView(View):
         return redirect('login')
 
 
-
-# class Login_view(View):
-#     def get(self, request):
-#         return render(request, 'registration/login.html')
-    
-#     def post(self, request):
-#         username = request.POST["username"]
-#         password = request.POST["password"]
-           
-#         if username and password:
-#             user= auth.authenticate(username=username, password=password)
-       
-#             if user:
-#                 if user.is_active:
-#                     auth.login(request, user)
-#                     messages.success(request, 'Welcome back, ' +user.username + ' you are now logged in')
-#                     return redirect('Questionnaire')
-#                 messages.error(request,'Your account is not active')
-            
-#             else:
-#                 messages.error(request, 'Invalid credentials, please try again')
-        
-#         else:
-#             messages.error(request, 'You do not have an account')
-            
-        return redirect(' ')
-
             
 class UsernameValidationView(View):
     def post(self, request):
