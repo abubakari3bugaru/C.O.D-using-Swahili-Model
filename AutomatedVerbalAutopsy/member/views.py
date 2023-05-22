@@ -11,7 +11,7 @@ import json
 
 class Login_view(View):
     def get(self, request):
-        return render(request, 'registration/login.html')
+        return render(request, 'questionnaire/registration/login.html')
     
     def post(self, request):
         username = request.POST["username"]
@@ -25,12 +25,12 @@ class Login_view(View):
                     auth.login(request, user)
                     messages.success(request, 'Welcome back, ' +user.username +
                                      ' you are now logged in')
-                    return redirect('dashboard', message='success')
+                    return redirect('questionnaire:submit_form', message='success')
                 messages.error(request,'Your account is not active')
-                # return render(request, 'registration/login.html')
+               
             else:
                 messages.error(request, 'Invalid credentials, please try again')
-            # return render(request, 'registration/login.html')
+           
         else:    
              messages.error(request, 'You do not have an account')
         # return render(request, 'registration/login.html')

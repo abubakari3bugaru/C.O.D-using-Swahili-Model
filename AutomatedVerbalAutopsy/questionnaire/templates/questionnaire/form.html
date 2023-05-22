@@ -3,7 +3,7 @@
 {% block content%}
    
 <!-- Taarifa za Fomu -->
-<!-- {% url 'questionnaire:submit_form' %} -->
+ {% comment %} {% url 'questionnaire:submit_form' %}  {% endcomment %}
 
 
 <form action="{% url 'questionnaire:submit_form' %}" method="POST">
