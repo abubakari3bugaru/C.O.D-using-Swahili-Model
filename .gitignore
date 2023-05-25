@@ -7,6 +7,10 @@
 *.pyc
 *.pycache
 __pycache__/
+
+# These files are not needed inside the root directory
+**.pyc
+**/__pycache__
 local_settings.py
 
 # until further notice from the C.O.D project team
