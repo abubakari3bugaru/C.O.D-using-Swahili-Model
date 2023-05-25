@@ -1,9 +1,8 @@
-{% extends 'main.html'%}
+{% extends 'questionnaire/main.html'%}
 
 {% block content%}
-<div class="col-md-9 mb-3 ps-3 pt-3">
+<div class="col-md-12 mb-3 ps-3 pt-3">
   <div class="row mb-5">
-
     {% if messages %}
     <ul class="messages bg-success text-light p-3 list-unstyled fs-5 text-center">
     {% for message in messages %}
@@ -18,58 +17,63 @@
         messages[i].style.display = 'none';
       }
     }, 5000);
-
     </script>
-
-
-  
-  <div class="container">
-    <form class="form-inline">
-      <div class="row">
-        <div class="col-md-10">
-          <div class="form-group">
-            <input type="text" class="form-control" placeholder="Tafuta...">
+   
+    <div class="container">
+      <form class="form-inline">
+          <div class="col-md-10">
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Tafuta...">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <button type="submit" class="btn backgroung text-light">Tafuta</button>
           </div>
         </div>
-        <div class="col-md-2">
-          <button type="submit" class="btn backgroung text-light">Tafuta</button>
-        </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
-
+  <div class="row">
     <div class="container mt-4">
       <div class="row">
         <div class="col-md-4">
-          <button type="submit" href="/Questionnaire/submit-form/" class="btn btn-secondary p-2">+ Ongeza Fomu</button>
+          <button type="submit" id="submit-btn"  class="btn btn-secondary p-2">+ Ongeza Fomu</button>
         </div>
         <div class="col-md-8"></div>
       </div>
     </div>
-   
-  <div class="container mt-3 mb-5">
-    <canvas id="myChart" ></canvas>
-  </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var ctx = document.getElementById('myChart').getContext('2d');
-      var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-          datasets: [{
-            label: 'Riport Zote',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: ['red', 'blue', 'yellow', 'green', 'purple', 'orange']
-          }]
-        },
-        options: {
-          responsive: true
-        }
+      <script>
+      $(document).ready(function() {
+        $('#submit-btn').click(function() {
+          window.location.href = "{% url 'questionnaire:submit_form' %}";
+        });
       });
-    });
-  </script>
+      </script>
+        
+        <div class="container mt-3 mb-5">
+          <canvas id="myChart" ></canvas>
+        </div>
+
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                  label: 'Riport Zote',
+                  data: [12, 19, 3, 5, 2, 3],
+                  backgroundColor: ['red', 'blue', 'yellow', 'green', 'purple', 'orange']
+                }]
+              },
+              options: {
+                responsive: true
+              }
+            });
+          });
+        </script>
 
   <div class="row">
   <div class="col-md-4">
@@ -98,40 +102,54 @@
      </div>
   </div>
   </div>
+  
 
-<div class="row mt-5">
-  <div class="col-md-1"></div>
-  <div class="col-md-11">
-  <table  class="table  table-striped">
-    <h4 class="text-center mb-3"><b>Taarifa Za Mhojiwa</b></h4>
-    <thead>
-      <tr>
-        <th>Jina la kwanza</th>
-        <th>Jina la Kati</th>
-        <th>Jina la mwisho</th>
-        <th>Mahali</th>
-        <th>Mkoa</th>
-        <th>Shahidi</th>
-        <!-- Add more column headers if needed -->
-      </tr>
-    </thead class="p3">
-    <tbody>
-      {% for i in all  %}
-      {% if loop.index <= 10 %}
-      <tr>
-        <td>{{ i.first_name }}</td>
-        <td>{{ i.middle_name }}</td>
-        <td>{{ i.last_name }}</td>
-        <td>{{ i.place }}</td>
-        <td>{{ i.region }}</td>
-        <td>{{ i.shahidi }}</td>
-        <!-- Add more columns if needed -->
-      </tr>
-      {% endif %}
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-</div>
+  <div class="row mt-5">
+    <div class="col-md-1"></div>
+    <div class="col-md-11">
+    <table  class="table  table-striped">
+      <h4 class="text-center mb-3"><b>Taarifa Za Marehemu</b></h4>
+        <thead>
+          <tr>
+            <th>Jina la Mhojiwa</th>
+            <th>Jina la Kati</th>
+            <th>Jina la mwisho</th>
+            <th>Mahali</th>
+            <th>Mkoa</th>
+            <th>Shahidi</th>
+            <!-- Add more column headers if needed -->
+          </tr>
+      </thead>
+      <tbody>
+        {% for item in page_obj %}
+        <tr>
+          <td>{{ item.first_name }}</td>
+          <td>{{ item.middle_name }}</td>
+          <td>{{ item.last_name }}</td>
+          <td>{{ item.place }}</td>
+          <td>{{ item.region }}</td>
+          <td>{{ item.shahidi }}</td>
+          <!-- Add more columns if needed -->
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    
+    <div class="pagination">
+      <span class="step-links">
+        {% if page_obj.has_previous %}
+          <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+    
+        <span class="current-page">{{ page_obj.number }}</span>
+    
+        {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+      </span>
+    </div>
+    
+ </div>
+ </div>
 </div>
 {% endblock %}

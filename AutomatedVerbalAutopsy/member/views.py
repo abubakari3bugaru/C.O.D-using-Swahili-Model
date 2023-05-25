@@ -34,7 +34,7 @@ class Login_view(View):
         else:    
              messages.error(request, 'You do not have an account')
         # return render(request, 'registration/login.html')
-        return redirect('login')
+        return redirect('member:login')
     
 
 
@@ -43,7 +43,7 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         messages.success(request, 'You have been logged out.')
-        return redirect('login')
+        return redirect('member:login')
 
 
             

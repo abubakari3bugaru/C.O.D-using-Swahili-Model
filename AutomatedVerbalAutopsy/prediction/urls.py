@@ -5,4 +5,5 @@ app_name = 'prediction'
 urlpatterns = [
     path('', views.index, name='index'),
     path('predict/', views.predict, name='predict'),
+    path('predict/<str:message>/', views.predict, name='predict'),
 ]

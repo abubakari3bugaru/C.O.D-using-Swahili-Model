@@ -58,7 +58,7 @@
         {% if username %}
         <div class="row">
           <div class="col-sm-6">
-        <a class="nav-link text-light  fs-5 px-3" href="#"><i class="fas fa-user-circle"></i>  {{ username }}</a>
+        <a class="nav-link text-light  fs-5 px-3" href="#"><i class="fas fa-user-circle p-2"></i>  {{ username }}</a>
       </div>
         <div class="col-sm-6">
           <a  class="nav-link  text-light fs-5 " href="{% url 'member:logout' %}"><u>Sign Out</u></a>
@@ -83,13 +83,13 @@
       </div>
         <ul class="nav flex-column mx-4">
           <li class="nav-item">
-            <a class="nav-link " aria-current="page" href="/Questionnaire/dashboard/">
+            <a class="nav-link " aria-current="page" href="/questionnaire/dashboard/">
               <span data-feather="Home.html"></span>
               Nyumbani
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="/Questionnaire/submit-form/">
+            <a class="nav-link active" href="/questionnaire/submit-form/">
               <span data-feather="form.html"></span>
               Fomu Za Maelezo
             </a>

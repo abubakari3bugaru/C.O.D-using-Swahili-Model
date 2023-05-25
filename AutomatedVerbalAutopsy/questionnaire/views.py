@@ -6,6 +6,7 @@ from django.contrib import auth
 from .models import COD
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.core.paginator import Paginator
 
 
 
@@ -42,14 +43,17 @@ def cod(request, message=None):
     
     return render(request, 'questionnaire/form.html', {'username': username, 'message': message})
 
-
-#function ya kuingiza data to database kwa mhanga
-
-
-def maelezo(request,message=None):
-    all_maelezo=COD.objects.order_by('-id').values_list('maelezo', flat=True).first()
-    # row_count = all_maelezo.count()
-    
+def maelezo(request, message=None):
+    all_maelezo = COD.objects.all()
+    paginator = Paginator(all_maelezo, 10)  # Display 10 items per pag
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    row_count = COD.objects.count()
     username = request.user.username 
-    return render(request, 'questionnaire/success.html',{'all_maelezo': all_maelezo, 'username': username,})
+    return render(request, 'questionnaire/dashboard.html', {'page_obj': page_obj, 'username': username, 'row_count': row_count})
+
+
+def dashboard(request, message=None):
+     username = request.user.username 
+     return render(request, 'questionnaire/dashboard.html',{'username': username, 'message': message})
 
