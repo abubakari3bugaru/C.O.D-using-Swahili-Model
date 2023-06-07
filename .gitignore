@@ -5,6 +5,7 @@
 *.log
 *.pot
 *.pyc
+*.pycache
 __pycache__/
 
 # These files are not needed inside the root directory
