@@ -1,8 +1,0 @@
-{% extends 'prediction/main.html'%}
-{% block content %}
-<form method="post" action="{% url 'prediction:back' %}">
-    {% csrf_token %}
-    <p>Are you sure you want to delete the last object: {{ object_to_delete }}</p>
-    <button class="btn btn-danger" type="submit">Delete</button>
-</form>
-{% endblock %}

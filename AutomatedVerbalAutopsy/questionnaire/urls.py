@@ -15,6 +15,9 @@ urlpatterns = [
      path('dashboard/', views.dashboard, name='dashboard'),
      path('dashboard/<str:message>/', views.dashboard, name='dashboard'),
      path('maelezo/', views.maelezo, name='maelezo'),
+     path('profile/', views.profile, name='profile'),
+     path('change-password/', views.change_password, name='change_password'),
+     path('password/', views.password, name='password'),
 ] 
 
 
