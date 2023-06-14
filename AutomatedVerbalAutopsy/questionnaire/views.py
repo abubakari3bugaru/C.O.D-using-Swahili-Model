@@ -64,7 +64,9 @@ def dashboard(request, message=None):
 def profile(request,message=None):
      username = request.user.username 
      email=request.user.email
-     return render(request, 'questionnaire/profile.html',{'username': username, 'message': message})
+     first_name =request.user.first_name
+     last_name = request.user.last_name
+     return render(request, 'questionnaire/profile.html',{'username': username, 'message': message, 'email':email,'first_name':first_name,'last_name':last_name})
 
 
 
@@ -96,3 +98,34 @@ def change_password(request):
 def password(request):
     username = request.user.username 
     return render(request, 'questionnaire/change_password.html')
+
+def updateProfile(request,message=None):
+    username = request.user.username 
+    return render(request, 'questionnaire/update_profile.html')
+
+def Updated_profile(request, message=None):
+    if request.method == 'POST':
+        # Get the updated information from the form
+        username = request.POST['username']
+        email = request.POST['email']
+
+        # Update the user's profile with the new information
+        user = request.user
+        user.username = username
+        user.email = email
+        user.save()
+
+        # Add a success message
+        messages.success(request, 'Your profile has been updated successfully.')
+
+        # Redirect the user back to the profile page
+        return redirect('questionnaire:profile')
+
+    else:
+        # Retrieve the user's current information
+        username = request.user.username
+        email = request.user.email
+
+
+        return render(request, 'questionnaire/profile.html', {'username': username, 'message': message,
+                                                              'email': email })

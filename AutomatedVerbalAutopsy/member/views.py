@@ -25,16 +25,17 @@ class Login_view(View):
            
         if username and password:
             user= auth.authenticate(username=username, password=password)
-            email = user.email
-            first_name = user.first_name
-            last_name = user.last_name
+           
             
             if user:
                 if user.is_active:
                     auth.login(request, user)
                     messages.success(request, 'Welcome back, ' +user.username +
                                      ' you are now logged in')
-                    return redirect('questionnaire:submit_form', message='success')
+                    email = user.email
+                    first_name = user.first_name
+                    last_name = user.last_name
+                    return redirect('questionnaire:submit_form', message='success',)
                 messages.error(request,'Your account is not active')
                
             else:
