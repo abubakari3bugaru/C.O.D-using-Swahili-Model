@@ -26,7 +26,6 @@ def cod(request, message=None):
                 last_name=request.POST['lastName'],  # correction: lastName
                 place=request.POST['place'],
                 region=request.POST['region'],
-                # shahidi=request.POST['shahidi'],
                 simu=request.POST['simu'],
                 uhusiano=request.POST['uhusiano'],
                 uhusiano_kipindi_kifo=request.POST['uhusiano_kipindi_kifo'],
@@ -57,9 +56,11 @@ def maelezo(request, message=None):
 
 
 def dashboard(request, message=None):
-     username = request.user.username 
-     email=request.user.email
-     return render(request, 'questionnaire/dashboard.html',{'username': username, 'message': message})
+    username = request.user.username 
+    cod_data = COD.objects.all()  
+    return render(request, 'questionnaire/dashboard.html', {'cod_data': cod_data,'username': username, 'message': message})
+
+    
 
 def profile(request,message=None):
      username = request.user.username 

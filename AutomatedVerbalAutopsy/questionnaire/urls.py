@@ -13,7 +13,6 @@ urlpatterns = [
      path('submit-form/<str:message>/', views.cod, name='submit_form'),
       
      path('dashboard/', views.dashboard, name='dashboard'),
-     path('dashboard/<str:message>/', views.dashboard, name='dashboard'),
      path('maelezo/', views.maelezo, name='maelezo'),
      path('profile/', views.profile, name='profile'),
      path('Updated-profile/', views.Updated_profile, name='Updated_profile'),
