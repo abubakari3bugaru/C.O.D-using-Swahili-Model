@@ -3,21 +3,7 @@
 {% block content%}
 <div class="col-md-12 mb-3 ps-3 pt-3">
   <div class="row mb-5">
-    {% if messages %}
-    <ul class="messages bg-success text-light p-3 list-unstyled fs-5 text-center">
-    {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-    </ul>
-    {% endif %}
-    <script>
-    setTimeout(function() {
-      var messages = document.getElementsByClassName('messages');
-      for (var i = 0; i < messages.length; i++) {
-        messages[i].style.display = 'none';
-      }
-    }, 5000);
-    </script>
+    
   <div class="row">
    
     <div class="container">
@@ -36,7 +22,7 @@
     <div class="container mt-4">
       <div class="row">
         <div class="col-md-4">
-          <button type="submit" id="submit-btn"  class="btn btn-secondary p-2">+ Ongeza Fomu</button>
+          <button type="submit" href="/questionnaire/submit" id="submit-btn"  class="btn btn-secondary p-2">+ Ongeza Fomu</button>
         </div>
         <div class="col-md-8"></div>
     </div>
@@ -53,17 +39,24 @@
         <div class="container mt-3 mb-5">
           <canvas id="myChart" ></canvas>
         </div>
-
         <script>
           document.addEventListener('DOMContentLoaded', function() {
             var ctx = document.getElementById('myChart').getContext('2d');
             var myChart = new Chart(ctx, {
               type: 'line',
               data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                labels: [
+                  {% for item in cod_data %}
+                    '{{ item.first_name }}',
+                  {% endfor %}
+                ],
                 datasets: [{
                   label: 'Riport Zote',
-                  data: [12, 19, 3, 5, 2, 3],
+                  data: [
+                    {% for item in cod_data %}
+                      {{ item.some_value }},
+                    {% endfor %}
+                  ],
                   backgroundColor: ['red', 'blue', 'yellow', 'green', 'purple', 'orange']
                 }]
               },
@@ -73,33 +66,36 @@
             });
           });
         </script>
+        
 
   <div class="row">
-  <div class="col-md-4">
+    <div class="col-md-2"></div>
+    <div class="col-md-3">
+      <div class="card backgroung border-0 rounded-3">
+        <div class="card-body back">
+          <div class="card-title text-center text-light p-3 border-0 rounded-3">Fomu Zilizokusanywa</div>
+          <div class="card-text fs-1 text-center text-light pb-3"><b>{{ cod_data.count }}</b></div>
+        </div>
+      </div>
+    </div>
+    
+
+  <div class="col-md-3">
     <div class="card backgroung border-0 rounded-3">
-     <div class="cad-body">
-      <div class="card-title text-center text-light p-3 border-0 rounded-3">Fomu Zilizokusanywa</div>
-      <div class="card-text fs-1 text-center text-light pb-3"><b>{{ row_count }}</b></div>
-     </div>
+      <div class="card-body bg-secondary">
+        <div class="card-title text-center text-light p-3 border-0 rounded-3">Fomu Zilizokusanywa</div>
+        <div class="card-text fs-1 text-center text-light pb-3"><b>{{ cod_data.count }}</b></div>
+      </div>
     </div>
   </div>
-
-  <div class="col-md-4">
-    <div class="card bg-secondary">
-      <div class="cad-body">
-       <div class="card-title text-center text-light p-3 border-0 rounded-3">Fomu Zilizokusanywa</div>
-       <div class="card-text fs-1 text-center text-light pb-3"><b>{{ row_count }}</b></div>
+  
+  <div class="col-md-3">
+    <div class="card backgroung border-0 rounded-3">
+      <div class="card-body back">
+        <div class="card-title text-center text-light p-3 border-0 rounded-3">Fomu Zilizokusanywa</div>
+        <div class="card-text fs-1 text-center text-light pb-3"><b>{{ cod_data.count }}</b></div>
       </div>
-     </div>
-  </div>
-  <div class="col-md-4">
-    <div class="card back">
-      <div class="cad-body">
-       <div class="card-title  text-center text-light p-3 border-0 rounded-3">Fomu Zilizokusanywa</div>
-       <div class="card-text fs-1 text-center text-light pb-3"><b>{{ row_count }}</b></div>
-      </div>
-     </div>
-  </div>
+    </div>
   </div>
   
 
@@ -107,7 +103,7 @@
     <div class="col-md-1"></div>
     <div class="col-md-11">
     <table  class="table  table-striped">
-      <h4 class="text-center mb-3"><b>Taarifa Za Marehemu</b></h4>
+      <h4 class="text-center mb-3"><b>Taarifa Za Shuhuda</b></h4>
         <thead>
           <tr>
             <th>Jina la Mhojiwa</th>
@@ -115,23 +111,24 @@
             <th>Jina la mwisho</th>
             <th>Mahali</th>
             <th>Mkoa</th>
-            <th>Shahidi</th>
+            <th>Ushahidi</th>
             <!-- Add more column headers if needed -->
           </tr>
       </thead>
       <tbody>
-        {% for item in page_obj %}
+        {% for item in cod_data %}
         <tr>
           <td>{{ item.first_name }}</td>
           <td>{{ item.middle_name }}</td>
           <td>{{ item.last_name }}</td>
           <td>{{ item.place }}</td>
           <td>{{ item.region }}</td>
-          <td>{{ item.shahidi }}</td>
+          <td>{{ item.maelezo }}</td>
           <!-- Add more columns if needed -->
         </tr>
         {% endfor %}
       </tbody>
+      
     </table>
     
     <div class="pagination">

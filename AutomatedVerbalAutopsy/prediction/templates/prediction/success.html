@@ -1,6 +1,9 @@
-{% extends 'prediction/main.html'%}
+{% extends 'questionnaire/main.html'%}
 {% block content %}
 
+{% comment %} {% endcomment %}
+{% comment %} <form method="POST" action="{% url 'prediction:save' %}">
+  {% csrf_token %} {% endcomment %}
     <div class="cotainer-centre mt-5">
         <table  class="table  table-striped">
             <h4 class="text-center mb-3"><b>Taariza Za Marehemu</b></h4>
@@ -14,36 +17,57 @@
                   <th>Mahali</th>
                   <th>Maelezo</th>
                   <th>Sababu</th>
+                  <th>Accuracy</th>
+                  <th>ground_truth</th>
                   <!-- Add more column headers if needed -->
                 </tr>
             </thead>
             <tbody>
-         
               <tr>
-                <td>{{ other_field.jina_kwanza }} {{ other_field.jina_pili }} {{ other_field.jina_mwisho }}</td>
-                <td>{{ other_field.jinsia }} </td>
-                <td>{{ other_field.ndoa }} </td>
-                <td>{{ other_field.kuzaliwa }} </td>
-                <td> {{ other_field.kufa }} </td>
-                <td>{{ other_field.mahali }}</td>
-               
-                <!-- Add more columns if needed -->
+                <td >{{ other_field.jina_kwanza }} {{ other_field.jina_pili }} {{ other_field.jina_mwisho }}</td>
+                <td >{{ other_field.jinsia }} </td>
+                <td >{{ other_field.ndoa }} </td>
+                <td >{{ other_field.kuzaliwa }} </td>
+                <td > {{ other_field.kufa }} </td>
+                <td >{{ other_field.mahali }}</td>
                 <td>{{ all_maelezo }}</td>
-                <td> {% if prediction %}
+                <td>
+                  {% if prediction %}
                     {{ prediction }}
-                    {% endif %}</td>
+                  {% endif %}
+                  
+                    <input type="hidden" name="sababu" value="{{ prediction }}">
                    
+          
+                </td>
+                <td>{{ accuracy }}</td>
+                <td>{{ ground_truth }}</td>
               </tr>
-              <tr>
-                <td><a class="btn btn-secondary" href="{% url 'prediction:back' %}">Badili</a></td>
+                <td> <button onclick="window.location.href='{% url 'prediction:badili' %}';" class="btn btn-secondary">
+                  Badili
+               </button></td>
                 <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
-                <td><button class="btn btn-success" href="{% url 'prediction:save' %}">Save</button></td>
-              </tr>
+                <td></td>
+                <td></td>
+                <td>
+                <button type="submit" class="btn btn-success">Hifadhi</button>
+                </td>
+                {% comment %} <td><button  type="submit" class="btn btn-success">Hifadhi</button></td> {% endcomment %}
+              </tr> 
             </tbody>
           </table>
+          {% if list %}
+          <p> {{ list }}</p>
+          {% endif %}
+
+         
+       
+      
+       
+
 {% endblock %}

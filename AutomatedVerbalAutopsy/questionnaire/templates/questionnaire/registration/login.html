@@ -18,13 +18,22 @@
           <input type="text" class="form-control" id="usernameField" name="username" placeholder="username"><br>
           <input type="password" class="form-control" id="passwordField"  name="password" placeholder="Password">
         
-          {% if messages %}
+           {% if messages %}
         <ul class="messages bg-danger text-light list-unstyled  text-center">
       {% for message in messages %}
         <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
       {% endfor %}
     </ul>
-    {% endif %}
+    {% endif %} 
+
+
+{% comment %} {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %} {% endcomment %}
     <script>
       setTimeout(function() {
         var messages = document.getElementsByClassName('messages');

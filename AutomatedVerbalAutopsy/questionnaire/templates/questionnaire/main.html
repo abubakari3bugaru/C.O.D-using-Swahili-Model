@@ -18,11 +18,14 @@
     <link rel="stylesheet" href="{% static 'questionnaire/css/boostrap_min.css' %}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 
-
-
+    {% load static %}
     <!-- Favicons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.css">
+<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 <link rel="apple-touch-icon" href="/docs/5.0/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
 <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
@@ -34,7 +37,11 @@
 
 
      {% load static %}
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
      <link rel="stylesheet" href="{% static 'questionnaire/css/style.css' %}">
+     <link rel="stylesheet" type="text/css" href="{% static 'popup.css' %}">
 
   
 
@@ -47,27 +54,36 @@
   </head>
   <body>
     
-<header class="navbar navbar-success sticky-top flex-md-nowrap p-0 shadow back">
-    <div class="navbar-nav ">
-      <div class="nav-item  text-nowrap">
-        <a class="nav-link text-light px-3" href="#"><u> </u></a>
-      </div>
+<header class="navbar navbar-success sticky-top flex-md-nowrap p-0 shadow back p-2">
+    <div class="container-fluid">
+        <a class="nav-link text-light px-3 fs-5" href="#">CAUSES OF DEATH DETERMINATION</a>
     </div>
-    <div class="navbar-nav text-decoration-none p-2" >
-       <div class="nav-item  text-nowrap">
-        {% if username %}
-        <div class="row">
-          <div class="col-sm-6">
-        <a class="nav-link text-light  fs-5 px-3" href="#"><i class="fas fa-user-circle p-2"></i>  {{ username }}</a>
-      </div>
-        <div class="col-sm-6">
-          <a  class="nav-link  text-light fs-5 " href="{% url 'member:logout' %}"><u>Sign Out</u></a>
-        </div>
-      </div>
-       {% endif %}
-      </div>
+    <div class="btn-group bg-light mr-3">
+      <div class="btn-group">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <span class="fa fa-user white-icon ">&nbsp;<i class="caret"></i></span>
+        <span class="sr-only">Toggle Dropdown</span>
+      </button>
+      <ul class="dropdown-menu" role="menu" style="right: 0; left: auto;">
+        <!-- Dropdown menu items -->
+        <li>
+          {% if username %}
+          <a class="dropdown-item" > {{ username }}</a>
+          
+        </li>
+        <li>
+          <a class="dropdown-item" >{{ email }}</a>
+          {% endif %}
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+          <a class="dropdown-item" href="{% url 'questionnaire:profile' %}">View Profile</a>
+        </li>
+        <li><a class="dropdown-item" href="{% url 'questionnaire:password' %}">Change Password</a></li>
+        <li><a  class="dropdown-item " href="{% url 'member:logout' %}">Logout</a>
+       </li>
+      </ul>
     </div>
-    
 </header>
 
 <div class="container-fluid">
@@ -81,27 +97,32 @@
         <div class="m-3 mb-5">
         <img src="{% static 'questionnaire/images/logo.png' %}" alt="Logo" style="width:150px; height:150px;">
       </div>
+      <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4  mx-2 mb-1 text-muted">
+        <span>Kuhusu Mahojiano</span>
+        <a class="link-secondary" href="#" aria-label="Add a new report">
+          <span data-feather="plus-circle"></span>
+        </a>
+      </h6>
         <ul class="nav flex-column mx-4">
           <li class="nav-item">
             <a class="nav-link " aria-current="page" href="/questionnaire/dashboard/">
-              <span data-feather="Home.html"></span>
+              <span data-feather="home"></span>
               Nyumbani
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link active" href="/questionnaire/submit-form/">
-              <span data-feather="form.html"></span>
+              <span data-feather="file-text"></span>
               Fomu Za Maelezo
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/report/">
-              <span data-feather="shopping-cart"></span>
-              Ripoti
-            </a>
+            <a  class="nav-link" href="">
+              <i class="fa fa-file-pdf-o"></i><span>Reports</span></a>
           </li>
         </ul>
-
+     
+          
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4  mx-2 mb-1 text-muted">
           <span>Taarifa na Ripoti</span>
           <a class="link-secondary" href="#" aria-label="Add a new report">
@@ -120,7 +141,7 @@
     </nav>
 
     <main class="col-md-12 ms-sm-auto col-lg-10 px-md-4">    
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 "> 
+      {% comment %} <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">  {% endcomment %}
  
       {% block content%} 
       

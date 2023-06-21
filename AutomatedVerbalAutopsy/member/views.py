@@ -3,10 +3,13 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_protect
 from django.views import View
 from django.urls import reverse
+import requests
 from django.contrib.auth import authenticate, login ,logout
 from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib import auth
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.tokens import default_token_generator
 import uuid
 from .models import Profile
 import json
@@ -22,13 +25,17 @@ class Login_view(View):
            
         if username and password:
             user= auth.authenticate(username=username, password=password)
+           
             
             if user:
                 if user.is_active:
                     auth.login(request, user)
                     messages.success(request, 'Welcome back, ' +user.username +
                                      ' you are now logged in')
-                    return redirect('questionnaire:submit_form', message='success')
+                    email = user.email
+                    first_name = user.first_name
+                    last_name = user.last_name
+                    return redirect('questionnaire:submit_form', message='success',)
                 messages.error(request,'Your account is not active')
                
             else:
@@ -49,21 +56,6 @@ class LogoutView(View):
         return redirect('member:login')
 
 
-            
-# class UsernameValidationView(View):
-#     def post(self, request):
-#         data= json.loads(request.body)
-#         username=data['username']
-#         if not str(username).isalnum():
-#             return JsonResponse({'username_error':'username should only contain alphanumeric character'}, status=400)
-#         if User.objects.filter(username=username).exists():
-#             return JsonResponse({'username_error':'username is already exist in the database'}, status=409)
-        
-#         return JsonResponse({'username_valid':True})
-
-# class RegistrationView(View):
-#     def get(self,request):
-#         return render(request, 'registration/login.html') 
     
 def forgetPassword(request):
     try:
@@ -94,6 +86,44 @@ def changePassword(request, token):
     except Exception as e:
         print(e)
     return render(request, 'questionnaire/registration/login.html')
-    # return render(request, 'questionnaire/registration/change_password.html')
+    # return render(request, 'questionnaire/registration/change_password.html
 
 
+
+    
+def password_reset_view(request):
+    if request.method == 'POST':
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            user = User.objects.get(email=email)
+            
+            # Generate a unique token for the password reset link
+            token = default_token_generator.make_token(user)
+            
+            # Construct the password reset link
+            reset_link = request.build_absolute_uri(
+                reverse('password_reset_confirm', args=[user.pk, token]))
+            
+            # Send the password reset email using Sendinblue API
+            sendinblue_data = {
+                'sender': {
+                    'name': 'Elisha Massawe',
+                    'email': 'elishaellyclif@gmail.com'
+                },
+                'to': [{'email': email}],
+                'subject': 'Reset your password',
+                'htmlContent': f'Click the following link to reset your password: {reset_link}'
+            }
+            response = requests.post(
+                'https://api.sendinblue.com/v3/smtp/email',
+                json=sendinblue_data,
+                headers={'api-key': 'z0isodl2wljeuwq4w8oz3udqqp3qdon3'}
+            )
+            
+            if response.status_code == 201:
+                return render(request, 'questionnaire/registration/forget_password.html')
+    else:
+        form = PasswordResetForm()
+    
+    return render(request, 'questionnaire/registration/forget_password.html', {'form': form})
