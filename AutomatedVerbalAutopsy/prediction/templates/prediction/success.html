@@ -1,56 +1,73 @@
-{% extends 'prediction/main.html'%}
+{% extends 'questionnaire/main.html'%}
 {% block content %}
-<div class="cotainer-centre">
-    <span>You have successful insert data </span>
-</div>
-<div class="col-md-10 mt-5 ps-3 display-flex ">
-    <div class="row border border-bottom">
-        <div class="col-md-8">
-            <h4>Matokeo Ya Mahojiano</h4>
-        </div>
-	<div class="col-md-4">
-	    {% if prediction %}
-		    {{ prediction }}
-	    {% endif %}
-	</div>
-    </div>
-    
-    <div class="row border border-bottom">
-        <div class="mb-1 ">
-            <label for="firstName" class="col-sm-5 col-form-label fs-5">Namba Ya Rejea:</label>
-        </div>
-    </div>
-    <div class="row border border-bottom">
-        <div class="mb-1 ">
-            <label for="firstName" class="col-sm-5 col-form-label fs-5">Sababu ya kifo kulingana na mchakato: <span>{{ all_maelezo }}</span></label>
-            
-        </div>
-    </div>
-    <div class="row border border-bottom" >
-        <div class="col-3">
-            <div class="mb-1 ">
-                <label for="shahidi" class="form-check-label col-sm-4 fs-5">Unapitisha sababu ya kifo? <span></span></label> 
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-              <label class="form-check-label fs-5" for="inlineRadio1">Ndio</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-              <label class="form-check-label fs-5" for="inlineRadio1">Hapana</label>
-            </div>
-        </div>
-    <div class="row">
-        <div class="col-md-3"> </div>
-            <div class="col-md-8">
-                <div class="col-md-8">
-                    <textarea class="form-control" placeholder="maelezo kuhusu sababu ya kifo..." id="floatingTextarea2" style="height: 150px"></textarea>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-</div>
+
+{% comment %} {% endcomment %}
+{% comment %} <form method="POST" action="{% url 'prediction:save' %}">
+  {% csrf_token %} {% endcomment %}
+    <div class="cotainer-centre mt-5">
+        <table  class="table  table-striped">
+            <h4 class="text-center mb-3"><b>Taariza Za Marehemu</b></h4>
+              <thead>
+                <tr>
+                  <th>Jina la Marehemu</th>
+                  <th>Jinsia</th>
+                  <th>Ndoa</th>
+                  <th>Kuzaliwa</th>
+                  <th>Kufa</th>
+                  <th>Mahali</th>
+                  <th>Maelezo</th>
+                  <th>Sababu</th>
+                  <th>Accuracy</th>
+                  <th>ground_truth</th>
+                  <!-- Add more column headers if needed -->
+                </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td >{{ other_field.jina_kwanza }} {{ other_field.jina_pili }} {{ other_field.jina_mwisho }}</td>
+                <td >{{ other_field.jinsia }} </td>
+                <td >{{ other_field.ndoa }} </td>
+                <td >{{ other_field.kuzaliwa }} </td>
+                <td > {{ other_field.kufa }} </td>
+                <td >{{ other_field.mahali }}</td>
+                <td>{{ all_maelezo }}</td>
+                <td>
+                  {% if prediction %}
+                    {{ prediction }}
+                  {% endif %}
+                  
+                    <input type="hidden" name="sababu" value="{{ prediction }}">
+                   
+          
+                </td>
+                <td>{{ accuracy }}</td>
+                <td>{{ ground_truth }}</td>
+              </tr>
+                <td> <button onclick="window.location.href='{% url 'prediction:badili' %}';" class="btn btn-secondary">
+                  Badili
+               </button></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                <button type="submit" class="btn btn-success">Hifadhi</button>
+                </td>
+                {% comment %} <td><button  type="submit" class="btn btn-success">Hifadhi</button></td> {% endcomment %}
+              </tr> 
+            </tbody>
+          </table>
+          {% if list %}
+          <p> {{ list }}</p>
+          {% endif %}
+
+         
+       
+      
+       
+
 {% endblock %}

@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from decouple import config
+from django.contrib.messages import constants as messages
+
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -138,3 +140,28 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 MODEL_DIR = os.path.join(BASE_DIR, 'prediction/static/prediction/models')
+
+# EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST='smtp.gmail.com'
+# EMAIL_USE_TLS=True
+# EMAIL_PORT='587'
+
+# settings.py
+
+# Add the message storage backend
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+# Configure the message tags (optional)
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp-relay.sendinblue.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'Elisha Massawe'  # Your Sendinblue SMTP username
+EMAIL_HOST_PASSWORD = 'z0isodl2wljeuwq4w8oz3udqqp3qdon3'  # Your Sendinblue API key
+DEFAULT_FROM_EMAIL = 'elishaellyclif@gmail.com'  # Sender's email address

@@ -19,7 +19,7 @@ class COD(models.Model):
     last_name = models.CharField(max_length=255)
     place = models.CharField(max_length=255)
     region = models.CharField(max_length=255)
-    shahidi = models.CharField(max_length=255)
+    # shahidi = models.CharField(max_length=255)
     simu = models.IntegerField()
     uhusiano = models.CharField(max_length=255, choices=Uhusiano_marehemu)
     uhusiano_kipindi_kifo = models.CharField(max_length=255, choices=Uhusiano_kifo)
@@ -52,10 +52,7 @@ class COD(models.Model):
     maelezo = models.TextField()
     
     def __str__(self):
-        return self.first_name
+        return self.jina_kwanza
     
-
-
-
 
 
