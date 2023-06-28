@@ -1,9 +1,8 @@
 {% extends 'questionnaire/main.html'%}
 {% block content %}
 
-{% comment %} {% endcomment %}
-{% comment %} <form method="POST" action="{% url 'prediction:save' %}">
-  {% csrf_token %} {% endcomment %}
+<form method="POST" action="{% url 'prediction:save' %}">
+  {% csrf_token %}
     <div class="cotainer-centre mt-5">
         <table  class="table  table-striped">
             <h4 class="text-center mb-3"><b>Taariza Za Marehemu</b></h4>
@@ -18,8 +17,6 @@
                   <th>Maelezo</th>
                   <th>Sababu</th>
                   <th>Accuracy</th>
-                  <th>ground_truth</th>
-                  <!-- Add more column headers if needed -->
                 </tr>
             </thead>
             <tbody>
@@ -34,14 +31,15 @@
                 <td>
                   {% if prediction %}
                     {{ prediction }}
-                  {% endif %}
-                  
+                 
                     <input type="hidden" name="sababu" value="{{ prediction }}">
-                   
-          
                 </td>
-                <td>{{ accuracy }}</td>
-                <td>{{ ground_truth }}</td>
+                <td>
+                {% for disease, score in diseases_scores %}
+                <li>{{ disease }}: {{ score }}%</li>
+            {% endfor %}
+            {% endif %}
+              </td>
               </tr>
                 <td> <button onclick="window.location.href='{% url 'prediction:badili' %}';" class="btn btn-secondary">
                   Badili
@@ -53,21 +51,21 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
                 <td>
                 <button type="submit" class="btn btn-success">Hifadhi</button>
                 </td>
-                {% comment %} <td><button  type="submit" class="btn btn-success">Hifadhi</button></td> {% endcomment %}
               </tr> 
             </tbody>
           </table>
-          {% if list %}
-          <p> {{ list }}</p>
-          {% endif %}
-
-         
-       
-      
-       
-
+</form>
 {% endblock %}
+
+{% comment %} {% if prediction %}
+<h2>Prediction: {{ prediction }}</h2>
+<h3>Scores:</h3>
+<ul>
+    {% for disease, score in diseases_scores %}
+        <li>{{ disease }}: {{ score }}%</li>
+    {% endfor %}
+</ul>
+{% endif %} {% endcomment %}

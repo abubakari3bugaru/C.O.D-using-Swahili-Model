@@ -106,24 +106,22 @@
       <h4 class="text-center mb-3"><b>Taarifa Za Shuhuda</b></h4>
         <thead>
           <tr>
-            <th>Jina la Mhojiwa</th>
-            <th>Jina la Kati</th>
-            <th>Jina la mwisho</th>
+            <th>Majina ya Shuhuda</th>
             <th>Mahali</th>
             <th>Mkoa</th>
             <th>Ushahidi</th>
+            <th>Sababu</th>
             <!-- Add more column headers if needed -->
           </tr>
       </thead>
       <tbody>
         {% for item in cod_data %}
         <tr>
-          <td>{{ item.first_name }}</td>
-          <td>{{ item.middle_name }}</td>
-          <td>{{ item.last_name }}</td>
+          <td>{{ item.first_name }}  {{ item.middle_name }}  {{ item.last_name }}</td>
           <td>{{ item.place }}</td>
           <td>{{ item.region }}</td>
           <td>{{ item.maelezo }}</td>
+          <td>{{ item.sababu }}</td>
           <!-- Add more columns if needed -->
         </tr>
         {% endfor %}

@@ -15,3 +15,17 @@
   .white-icon {
     color: white;
   }
+  
+  #loadingSpinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .nav-item:hover .nav-link {
+    color: #179be8; /* Replace with the desired hover color */
+  }
+
+  /* Active state */
+  .nav-item .nav-link.active {
+    color: #179be8; /* Replace with the desired active color */
+  }

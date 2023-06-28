@@ -4,7 +4,7 @@
    
 <!-- Taarifa za Fomu -->
  {% comment %} {% url 'questionnaire:submit_form' %}  {% endcomment %}
- <script>
+ {% comment %} <script>
   function validateForm() {
     // Retrieve form inputs
     var firstName = document.forms["questionnaire"]["firstName"].value;
@@ -34,7 +34,7 @@
       return false;
     }
   }
-</script>
+</script> {% endcomment %}
 
 
 
@@ -186,10 +186,11 @@
                     </div>
                 </div>
                 
+              </div>
                 
                     <!-- Taarifa za Marehemu    -->
                     <div class="row mb-3">
-                        <div class="col-12 p-1 mb-4 text-light backgroung">
+                        <div class="col-12 p-1 mb-4  mt-3 text-light backgroung">
                      <h4 class="text-center">Taarifa za Marehemu</h4>
                    </div>
             

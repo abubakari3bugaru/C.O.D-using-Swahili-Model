@@ -15,7 +15,15 @@ from django.template.loader import get_template
 from io import BytesIO
 from reportlab.pdfgen import canvas
 # Define Constant
-MODELFILE = settings.MODEL_DIR + '/diseaseModel.pkl'
+MODELFILE = settings.MODEL_DIR + '/random_forest_model.pkl'
+VECFILE = settings.MODEL_DIR + '/count_vectorizer.pkl'
+
+
+with open(MODELFILE, 'rb') as f:
+    model = pickle.load(f)
+
+with open(VECFILE, 'rb') as f:
+    vectorizer = pickle.load(f)  
 
 def index(request):
     if request.method == 'POST':
@@ -42,10 +50,7 @@ def index(request):
 
 def predict_result(request,message=None):
     username = request.user.username
-    ground_truth_data = pd.read_csv('translatedDatasetDiseases.csv')
-
     # Extract the disease labels from the ground truth data
-    ground_truth_labels = ground_truth_data['ugonjwa'].tolist()
     inputs =COD.objects.order_by('-id').values_list('maelezo', flat=True).first()
 
     # row_count = all_maelezo.count()
@@ -61,11 +66,7 @@ def predict_result(request,message=None):
     
     # Generate prediction using the model and user inputs
     prediction = model.predict(inputs)
-   
     prediction = str(prediction[0]) 
-    # ground_truth = [ground_truth] * len(inputs)
-    
-    # accuracy = metrics.accuracy_score(ground_truth_data, [prediction])*100
     inputs = str(inputs[0]) 
     return render(request, 'prediction/success.html',{'all_maelezo': inputs,  'username':username, 'other_field':other_field, 'prediction':prediction })
 
@@ -76,6 +77,42 @@ def delete_questionnaire(request):
         object_to_delete.delete()
         return redirect('questionnaire:submit_form')
     return render(request, 'prediction/success.html', {'object_to_delete': object_to_delete ,'username': username})
+
+def predict_disease(request):
+    username = request.user.username
+    inputs =COD.objects.order_by('-id').values_list('maelezo', flat=True).first()
+
+    # row_count = all_maelezo.count()
+    other_field= COD.objects.all().order_by('-id').first()
+   
+    # Check if inputs is a string
+    if isinstance(inputs, str):
+        inputs = [inputs]
+
+    # Transform the user input using the vectorizer
+    user_input_vector = vectorizer.transform(inputs)
+
+    # Predict the disease for the user input
+    prediction = model.predict(user_input_vector)[0]
+
+    # Get the probability scores for each disease
+    disease_scores = model.predict_proba(user_input_vector)[0]
+
+    # Convert the scores to percentages
+    scores_percentage = [round(score * 100, 2) for score in disease_scores]
+    inputs = str(inputs[0]) 
+    # Prepare the data to pass to the template
+    context = {
+        'prediction': prediction,
+        'diseases_scores': zip(model.classes_, scores_percentage),
+        'all_maelezo': inputs,
+        'username':username,
+        'other_field':other_field
+        }
+
+    return render(request, 'prediction/success.html', context, )
+
+  
 
 
             
@@ -131,8 +168,6 @@ def generate_report(request):
     response.write(pdf_content)
 
     return response
-
-
 
 def success(request, message=None):
     username = request.user.username 
