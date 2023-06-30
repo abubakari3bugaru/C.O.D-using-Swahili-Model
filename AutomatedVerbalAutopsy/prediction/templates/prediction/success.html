@@ -16,7 +16,7 @@
                   <th>Mahali</th>
                   <th>Maelezo</th>
                   <th>Sababu</th>
-                  <th>Accuracy</th>
+                  <th>Asilimia</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,8 +26,8 @@
                 <td >{{ other_field.ndoa }} </td>
                 <td >{{ other_field.kuzaliwa }} </td>
                 <td > {{ other_field.kufa }} </td>
-                <td >{{ other_field.mahali }}</td>
-                <td>{{ all_maelezo }}</td>
+                <td > {{ other_field.mahali }} </td>
+                <td > {{ other_field.maelezo }} </td>
                 <td>
                   {% if prediction %}
                     {{ prediction }}
@@ -41,31 +41,25 @@
             {% endif %}
               </td>
               </tr>
-                <td> <button onclick="window.location.href='{% url 'prediction:badili' %}';" class="btn btn-secondary">
-                  Badili
-               </button></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>
-                <button type="submit" class="btn btn-success">Hifadhi</button>
+              <tr>
+              <td>
+                  <button onclick="window.location.href='{% url 'prediction:badili' %}';" class="btn btn-secondary">
+                    Badili
+                  </button>
                 </td>
+                <td></td>  
+                <td></td>  
+                <td></td>  
+                <td></td>  
+                <td></td>  
+                <td></td>  
+                <td></td>   
+              <td>
+                <button type="submit" class="btn btn-success">Hifadhi</button>
+              </td>      
               </tr> 
             </tbody>
           </table>
-</form>
-{% endblock %}
+        </form>
 
-{% comment %} {% if prediction %}
-<h2>Prediction: {{ prediction }}</h2>
-<h3>Scores:</h3>
-<ul>
-    {% for disease, score in diseases_scores %}
-        <li>{{ disease }}: {{ score }}%</li>
-    {% endfor %}
-</ul>
-{% endif %} {% endcomment %}
+{% endblock %}

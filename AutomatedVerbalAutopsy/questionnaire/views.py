@@ -21,9 +21,9 @@ def cod(request, message=None):
         # form = SubmitForm1(request.POST)
         # if form.is_valid():
             form_COD = COD(
-                first_name=request.POST['firstName'],   # correction: firstName
-                middle_name=request.POST['middleName'],  # correction: middleName
-                last_name=request.POST['lastName'],  # correction: lastName
+                first_name=request.POST['firstName'],   
+                middle_name=request.POST['middleName'],  
+                last_name=request.POST['lastName'],  
                 place=request.POST['place'],
                 region=request.POST['region'],
                 simu=request.POST['simu'],
@@ -34,12 +34,13 @@ def cod(request, message=None):
                 jina_mwisho=request.POST['jina_mwisho'],
                 jinsia=request.POST['jinsia'],
                 ndoa=request.POST['ndoa'],
-                kuzaliwa=request.POST['kuzaliwa'],  # correction: kuzaliwa_year
-                kufa=request.POST['kufa'],  # kufa_year
+                kuzaliwa=request.POST['kuzaliwa'],  
+                kufa=request.POST['kufa'], 
                 mahali=request.POST['mahali'],
                 maelezo=request.POST['maelezo']
             )
             form_COD.save()
+
             return redirect('prediction:predict')
     
     return render(request, 'questionnaire/form.html', {'username': username, 'message': message})

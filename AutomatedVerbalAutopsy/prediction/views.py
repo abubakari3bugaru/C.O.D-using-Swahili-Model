@@ -2,20 +2,20 @@ from django.contrib import messages
 from django.contrib import auth
 from django.shortcuts import render, redirect
 from django.conf import settings
-from questionnaire.models import COD
+from questionnaire.models import COD,CODWithSababu
 from django.shortcuts import render, redirect, get_object_or_404
 import pickle
-from .models import Predictions
 from django.http import HttpResponseBadRequest
 from sklearn.metrics import accuracy_score,confusion_matrix
 from sklearn import metrics
 import pandas as pd
 from django.http import HttpResponse
 from django.template.loader import get_template
+from .forms import PredictionForm
 from io import BytesIO
 from reportlab.pdfgen import canvas
 # Define Constant
-MODELFILE = settings.MODEL_DIR + '/random_forest_model.pkl'
+MODELFILE = settings.MODEL_DIR + '/naive_bayes.pkl'
 VECFILE = settings.MODEL_DIR + '/count_vectorizer.pkl'
 
 
@@ -121,18 +121,43 @@ def save_questionnaire(request, message=None):
     if request.method == 'POST':
         cod = COD.objects.latest('id')
         sababu = request.POST.get('sababu')
-     
-        predictions = Predictions(
-              cod=cod,
-              sababu=sababu
+    
+        codwithSababu = CODWithSababu(
+              sababu=sababu,
             )
-        predictions.save()
+        codwithSababu.save()
 
         # Redirect to the success page
         return redirect('prediction:success')
 
     return render(request, 'prediction/success.html', {'username': username })
 
+def success(request, message=None):
+    username = request.user.username 
+    cod_with_sababu_data = CODWithSababu.objects.all()
+    context = {
+        'cod_with_sababu_data': cod_with_sababu_data,
+        'username':username
+    }
+    return render(request, 'prediction/success1.html', context)
+
+# def save_prediction(request):
+#     if request.method == 'POST':
+#         form = PredictionForm(request.POST)
+#         if form.is_valid():
+#             sababu = form.cleaned_data['sababu']
+#             codwithSababu = CODWithSababu(
+#               sababu=sababu,
+#             )
+#             codwithSababu.save()
+
+#             # Save the `sababu` data to your desired model or perform any other action
+            
+#             return redirect('prediction:success')  # Replace 'prediction:success' with the appropriate URL name
+#     else:
+#         form = PredictionForm()
+    
+#     return render(request, 'prediction/success.html', {'form': form})
 
 
 def generate_report(request):
@@ -169,6 +194,3 @@ def generate_report(request):
 
     return response
 
-def success(request, message=None):
-    username = request.user.username 
-    return render(request, 'prediction/success1.html',{'username': username})

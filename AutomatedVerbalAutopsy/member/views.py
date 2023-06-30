@@ -30,8 +30,8 @@ class Login_view(View):
             if user:
                 if user.is_active:
                     auth.login(request, user)
-                    messages.success(request, 'Welcome back, ' +user.username +
-                                     ' you are now logged in')
+                    messages.success(request, 'Karibu , ' +user.username +
+                                     ' umefanikiwa kuingia kikamilifu')
                     email = user.email
                     first_name = user.first_name
                     last_name = user.last_name
@@ -39,10 +39,10 @@ class Login_view(View):
                 messages.error(request,'Your account is not active')
                
             else:
-                messages.error(request, 'Invalid credentials, please try again')
+                messages.error(request, 'Nywira yako si sahihi, Tafadhali jaribu tena')
            
         else:    
-             messages.error(request, 'You do not have an account')
+             messages.error(request, 'Hauna akaunti')
         # return render(request, 'registration/login.html')
         return redirect('member:login')
     
