@@ -1,50 +1,14 @@
 {% extends 'questionnaire/main.html'%}
 {% block content %}
-<div class="row"></div>
-<div class="col-md-10 mt-5 ps-3 display-flex ">
-    <div class="row border border-bottom">
-        <div class="col-md-8">
-            <h4>Matokeo Ya Mahojiano</h4>
-        </div>
-    </div>
-    <div class="row border border-bottom">
-        <div class="mb-1 ">
-            <label for="firstName" class="col-sm-5 col-form-label fs-5">Namba Ya Rejea:</label>
-        </div>
-    </div>
-    <div class="row border border-bottom">
-        <div class="mb-1 ">
-            <label for="firstName" class="col-sm-5 col-form-label fs-5">Sababu ya kifo kulingana na mchakato: <span></span></label>
-        </div>
-    </div>
-    <div class="row border border-bottom" >
-        <div class="col-3">
-            <div class="mb-1 ">
-                <label for="shahidi" class="form-check-label col-sm-4 fs-5">Unapitisha sababu ya kifo? <span></span></label> 
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-              <label class="form-check-label fs-5" for="inlineRadio1">Ndio</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-              <label class="form-check-label fs-5" for="inlineRadio1">Hapana</label>
-            </div>
-        </div>
-    <div class="row">
-        <div class="col-md-3"> </div>
-            <div class="col-md-8">
-                <div class="col-md-8">
-                    <textarea class="form-control" placeholder="maelezo kuhusu sababu ya kifo..." id="floatingTextarea2" style="height: 150px"></textarea>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-</div>
-
-
-
+<ul>
+    {% for cod_with_sababu_obj in cod_with_sababu_data %}
+      <li>Jina Kwanza: {{ cod_with_sababu_obj.jina_kwanza }}</li>
+      <li>Sababu: {{ cod_with_sababu_obj.sababu }}</li>
+      <ul>
+        {% for cod_obj in cod_with_sababu_obj.cod_ptr.all %}
+          <li>Jina Kwanza: {{ cod_obj.jina_kwanza }}</li>
+        {% endfor %}
+      </ul>
+    {% endfor %}
+  </ul>
 {% endblock %}

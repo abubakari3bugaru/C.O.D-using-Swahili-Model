@@ -1,30 +1,45 @@
-{% extends 'register.html' %}
-  
-    {% block title %} Signup {% endblock %}
-    
-    {%block content %}
-    <div class="form-floating">
-      <input type="text" class="form-control" id="floatingInput" placeholder="khamis zuberi..">
-      <label for="floatingInput">full name</label>
-    </div>
-    <div class="form-floating">
-      <input type="text" class="form-control" id="floatingInput" placeholder=".....">
-      <label for="floatingInput">Username</label>
-    </div>
-    <div class="form-floating">
-      <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-      <label for="floatingInput">Email address</label>
-    </div>
-    <div class="form-floating">
-      <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-      <label for="floatingPassword">Password</label>
-    </div>
+{% extends 'questionnaire/register.html' %}
+{% load static %}
+{% block content %}
 
-    <div class="checkbox mb-3">
-      <label>
-        <input type="checkbox" value="remember-me"> Remember me
-      </label>
-    </div>
-    <button class="w-100 btn btn-lg btn-primary" type="submit">signup</button>
+
+    <div class="card p-3">
+      <div class="m-3 mb-2">
+        <img src="{% static 'questionnaire/images/logo.png' %}" alt="Logo" style="width:100px; height:100px;">
+      </div>
+      <div class="card-title">
+        <h4>Register Please</h4>
+      </div>    
+      <div class="card-body">
+        <div class="form-group p5">
+          <input type="number" class="form-control" id="card" name="card_no" placeholder="card number.."><br>
+          <input type="text" class="form-control" id="fullField" name="fullname" placeholder="full name"><br>
+          <input type="text" class="form-control" id="usernameField" name="username" placeholder="username"><br>
+          <input type="phone" class="form-control" id="phone" name="phone_number" placeholder="phone number.."><br>
+          <input type="password" class="form-control" id="passwordField"  name="password" placeholder="Password">
+           {% if messages %}
+        <ul class="messages bg-danger text-light list-unstyled  text-center">
+      {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} 
+
+
+    <script>
+      setTimeout(function() {
+        var messages = document.getElementsByClassName('messages');
+        for (var i = 0; i < messages.length; i++) {
+          messages[i].style.display = 'none';
+        }
+      }, 5000);
+    </script>
+      </div>
+        <input type="submit" value="Register" class="btn btn-block btn-primary" onclick="showLoadingSpinner()">
+    </div> 
     <p class="mt-5 mb-3 text-muted">&copy; 2023</p>
+  
+    <script src="{% static 'js/register.js' %}"></script>
+   
+
     {% endblock %}

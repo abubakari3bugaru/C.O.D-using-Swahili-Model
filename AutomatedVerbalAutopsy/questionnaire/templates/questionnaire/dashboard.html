@@ -115,14 +115,15 @@
           </tr>
       </thead>
       <tbody>
+
         {% for item in cod_data %}
         <tr>
-          <td>{{ item.first_name }}  {{ item.middle_name }}  {{ item.last_name }}</td>
+          <td>{{ item.jina_kwanza }}  {{ item.jina_pili }}  {{ item.jina_mwisho }}</td>
           <td>{{ item.place }}</td>
           <td>{{ item.region }}</td>
           <td>{{ item.maelezo }}</td>
           <td>{{ item.sababu }}</td>
-          <!-- Add more columns if needed -->
+          
         </tr>
         {% endfor %}
       </tbody>

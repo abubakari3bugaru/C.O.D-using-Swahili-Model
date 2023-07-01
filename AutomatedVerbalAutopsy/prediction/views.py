@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.contrib import auth
 from django.shortcuts import render, redirect
 from django.conf import settings
-from questionnaire.models import COD,CODWithSababu
 from django.shortcuts import render, redirect, get_object_or_404
 import pickle
 from django.http import HttpResponseBadRequest
@@ -14,7 +13,15 @@ from django.template.loader import get_template
 from .forms import PredictionForm
 from io import BytesIO
 from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from questionnaire.models import Shuhuda,Marehemu,Sababu
+from django.http import FileResponse
+import io
+from reportlab.lib.units import inch
+
 # Define Constant
+
+
 MODELFILE = settings.MODEL_DIR + '/naive_bayes.pkl'
 VECFILE = settings.MODEL_DIR + '/count_vectorizer.pkl'
 
@@ -51,10 +58,10 @@ def index(request):
 def predict_result(request,message=None):
     username = request.user.username
     # Extract the disease labels from the ground truth data
-    inputs =COD.objects.order_by('-id').values_list('maelezo', flat=True).first()
+    inputs =Marehemu.objects.order_by('-id').values_list('maelezo', flat=True).first()
 
     # row_count = all_maelezo.count()
-    other_field= COD.objects.all().order_by('-id').first()
+    other_field= Marehemu.objects.all().order_by('-id').first()
    
     # Check if inputs is a string
     if isinstance(inputs, str):
@@ -71,19 +78,28 @@ def predict_result(request,message=None):
     return render(request, 'prediction/success.html',{'all_maelezo': inputs,  'username':username, 'other_field':other_field, 'prediction':prediction })
 
 def delete_questionnaire(request):
-    username = request.user.username 
-    object_to_delete = COD.objects.latest('id')
+    username = request.user.username
+    marehemu_to_delete = Marehemu.objects.latest('id')
+    sababu_to_delete = marehemu_to_delete.sababu
+
     if request.method == 'POST':
-        object_to_delete.delete()
+        sababu_to_delete.delete()
+        marehemu_to_delete.delete()
         return redirect('questionnaire:submit_form')
-    return render(request, 'prediction/success.html', {'object_to_delete': object_to_delete ,'username': username})
+
+    context = {
+        'object_to_delete': marehemu_to_delete,
+        'username': username
+    }
+    return render(request, 'prediction/success.html', context)
+
 
 def predict_disease(request):
     username = request.user.username
-    inputs =COD.objects.order_by('-id').values_list('maelezo', flat=True).first()
+    inputs =Marehemu.objects.order_by('-id').values_list('maelezo', flat=True).first()
 
     # row_count = all_maelezo.count()
-    other_field= COD.objects.all().order_by('-id').first()
+    other_field= Marehemu.objects.all().order_by('-id').first()
    
     # Check if inputs is a string
     if isinstance(inputs, str):
@@ -101,7 +117,13 @@ def predict_disease(request):
     # Convert the scores to percentages
     scores_percentage = [round(score * 100, 2) for score in disease_scores]
     inputs = str(inputs[0]) 
+    marehemu_instance = get_object_or_404(Marehemu, id=other_field.id)
+    sababu, created = Sababu.objects.get_or_create(
+        Marehemu=marehemu_instance,
+        defaults={'sababu': prediction}
+    )
     # Prepare the data to pass to the template
+
     context = {
         'prediction': prediction,
         'diseases_scores': zip(model.classes_, scores_percentage),
@@ -112,61 +134,64 @@ def predict_disease(request):
 
     return render(request, 'prediction/success.html', context, )
 
-  
 
-
-            
-def save_questionnaire(request, message=None):
-    username = request.user.username 
-    if request.method == 'POST':
-        cod = COD.objects.latest('id')
-        sababu = request.POST.get('sababu')
-    
-        codwithSababu = CODWithSababu(
-              sababu=sababu,
-            )
-        codwithSababu.save()
-
-        # Redirect to the success page
-        return redirect('prediction:success')
-
-    return render(request, 'prediction/success.html', {'username': username })
 
 def success(request, message=None):
     username = request.user.username 
-    cod_with_sababu_data = CODWithSababu.objects.all()
+    cod_with_sababu_data = Sababu.objects.all()
     context = {
         'cod_with_sababu_data': cod_with_sababu_data,
         'username':username
     }
-    return render(request, 'prediction/success1.html', context)
+    return render(request, 'questionnaire/report.html', context)
 
-# def save_prediction(request):
-#     if request.method == 'POST':
-#         form = PredictionForm(request.POST)
-#         if form.is_valid():
-#             sababu = form.cleaned_data['sababu']
-#             codwithSababu = CODWithSababu(
-#               sababu=sababu,
-#             )
-#             codwithSababu.save()
 
-#             # Save the `sababu` data to your desired model or perform any other action
-            
-#             return redirect('prediction:success')  # Replace 'prediction:success' with the appropriate URL name
-#     else:
-#         form = PredictionForm()
-    
-#     return render(request, 'prediction/success.html', {'form': form})
+
+
+
+# def generate_report(request):
+#     # Get the causes of death data
+#     causes_of_death = COD.objects.all()
+
+#     # Create a PDF document
+#     buffer = BytesIO()
+#     pdf = canvas.Canvas(buffer)
+
+#     # Set up the PDF document
+#     pdf.setTitle("Causes of Death Report")
+#     pdf.setFont("Helvetica", 12)
+
+#     # Write the causes of death data in the PDF
+#     y = 750  # Initial y-coordinate
+#     for cause in causes_of_death:
+#         pdf.drawString(50, y, cause.maelezo)
+#         y -= 20
+
+#     # Save the PDF document
+#     pdf.showPage()
+#     pdf.save()
+
+#     # Get the PDF content from the buffer
+#     buffer.seek(0)
+#     pdf_content = buffer.getvalue()
+#     buffer.close()
+
+#     # Create an HTTP response with the PDF content as a file attachment
+#     response = HttpResponse(content_type='application/pdf')
+#     response['Content-Disposition'] = 'attachment; filename="causes_of_death_report.pdf"'
+#     response.write(pdf_content)
+
+#     return response
+
 
 
 def generate_report(request):
     # Get the causes of death data
-    causes_of_death = COD.objects.all()
+    causes_of_death = Sababu.objects.all()
 
     # Create a PDF document
     buffer = BytesIO()
-    pdf = canvas.Canvas(buffer)
+    pdf = canvas.Canvas(buffer, pagesize=letter)
 
     # Set up the PDF document
     pdf.setTitle("Causes of Death Report")
@@ -175,8 +200,11 @@ def generate_report(request):
     # Write the causes of death data in the PDF
     y = 750  # Initial y-coordinate
     for cause in causes_of_death:
-        pdf.drawString(50, y, cause.maelezo)
-        y -= 20
+        pdf.drawString(60, 5, cause.jina_kwanza)
+        pdf.drawString(65, 5, cause.jina_pili)
+        pdf.drawString(70, 5, cause.jina_mwisho)
+        pdf.drawString(50, -20, cause.maelezo)
+      
 
     # Save the PDF document
     pdf.showPage()
@@ -187,10 +215,7 @@ def generate_report(request):
     pdf_content = buffer.getvalue()
     buffer.close()
 
-    # Create an HTTP response with the PDF content as a file attachment
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="causes_of_death_report.pdf"'
-    response.write(pdf_content)
-
-    return response
+    # Render a preview page before download
+    context = {'pdf_content': pdf_content}
+    return render(request, 'prediction/report.html', context)
 

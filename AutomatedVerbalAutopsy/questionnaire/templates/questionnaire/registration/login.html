@@ -48,8 +48,10 @@
         </div> -->
       <a href="/member/forget_password/">forgot password?</a>
       </div>
-        <input type="submit" value="Login" class="btn btn-block btn-primary" onclick="showLoadingSpinner()">
+        <input type="submit" value="Login" class="btn btn-block btn-primary"><br>
+        <a href="{% url 'member:register' %}">Please register!</a>
     </div>
+   
     
     <p class="mt-5 mb-3 text-muted">&copy; 2023</p>
     <script>

@@ -3,12 +3,12 @@ from django.http import HttpResponse
 from django.views.generic import View
 from django.contrib import messages
 from django.contrib import auth
-from .models import COD
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
+from .models import Shuhuda,Marehemu,Sababu
 
 
 
@@ -18,9 +18,7 @@ def cod(request, message=None):
     email=request.user.email
     username = request.user.username  # Get the authenticated user's username
     if request.method == 'POST':
-        # form = SubmitForm1(request.POST)
-        # if form.is_valid():
-            form_COD = COD(
+            formShuhuda = Shuhuda(
                 first_name=request.POST['firstName'],   
                 middle_name=request.POST['middleName'],  
                 last_name=request.POST['lastName'],  
@@ -29,6 +27,9 @@ def cod(request, message=None):
                 simu=request.POST['simu'],
                 uhusiano=request.POST['uhusiano'],
                 uhusiano_kipindi_kifo=request.POST['uhusiano_kipindi_kifo'],
+            )
+
+            formMarehemu= Marehemu(
                 jina_kwanza=request.POST['jina_kwanza'],
                 jina_pili=request.POST['jina_pili'],
                 jina_mwisho=request.POST['jina_mwisho'],
@@ -39,7 +40,9 @@ def cod(request, message=None):
                 mahali=request.POST['mahali'],
                 maelezo=request.POST['maelezo']
             )
-            form_COD.save()
+            formShuhuda.save()
+            formMarehemu.save()
+            
 
             return redirect('prediction:predict')
     
@@ -47,21 +50,60 @@ def cod(request, message=None):
 
 def maelezo(request, message=None):
     email=request.user.email
-    all_maelezo = COD.objects.all()
+    all_maelezo = Marehemu.objects.all()
     paginator = Paginator(all_maelezo, 10)  # Display 10 items per pag
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    row_count = COD.objects.count()
+    row_count = Marehemu.objects.count()
     username = request.user.username 
     return render(request, 'questionnaire/dashboard.html', {'page_obj': page_obj, 'username': username, 'row_count': row_count})
 
 
-def dashboard(request, message=None):
-    username = request.user.username 
-    cod_data = COD.objects.all()  
-    return render(request, 'questionnaire/dashboard.html', {'cod_data': cod_data,'username': username, 'message': message})
+# def dashboard(request, message=None):
+#     username = request.user.username
+#     cod_data = CODWithSababu.objects.all()
+#     cod_values = []
 
+#     for cod_with_sababu in cod_data:
+#         cod_values.append({
+#             'jina_kwanza': cod_with_sababu.jina_kwanza,
+#             'jina_pili': cod_with_sababu.jina_pili,
+#             'jina_mwisho': cod_with_sababu.jina_mwisho,
+#             'place': cod_with_sababu.place,
+#             'mahali': cod_with_sababu.region,
+#             'maelezo': cod_with_sababu.maelezo,
+#             'sababu': cod_with_sababu.sababu,
+#         })
+
+#     return render(request, 'questionnaire/dashboard.html', {'cod_data': cod_values, 'username': username})
+
+def dashboard(request):
+    # Retrieve the latest CODWithSababu object and its associated COD object
+    cod=Marehemu.objects.latest('id')
+    cod_with_sababu = Sababu.objects.latest('id')
+    cod = cod_with_sababu.cod
     
+    # Retrieve the desired fields from both models
+    jina_kwanza = cod.jina_kwanza
+    jina_pili = cod.jina_pili
+    jina_mwisho = cod.jina_mwisho
+    place = cod.place
+    region = cod.region
+    maelezo = cod.maelezo
+    sababu = cod_with_sababu.sababu
+    
+    # Prepare the data to pass to the template
+    data = {
+        'jina_kwanza': jina_kwanza,
+        'jina_pili': jina_pili,
+        'jina_mwisho': jina_mwisho,
+        'place': place,
+        'region': region,
+        'maelezo': maelezo,
+        'sababu': sababu,
+    }
+    
+    return render(request, 'questionnaire/dashboard.html', data)    
 
 def profile(request,message=None):
      username = request.user.username 

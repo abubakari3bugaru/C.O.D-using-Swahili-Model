@@ -2,7 +2,9 @@ from django.db import models
 from django.utils import timezone
 
 
-class COD(models.Model):
+
+
+class Shuhuda(models.Model):
     Uhusiano_marehemu = (
         ('Baba', 'Baba'),
         ('Mama', 'Mama'),
@@ -22,6 +24,13 @@ class COD(models.Model):
     simu = models.CharField(max_length=100, default='')
     uhusiano = models.CharField(max_length=255, choices=Uhusiano_marehemu)
     uhusiano_kipindi_kifo = models.CharField(max_length=255, choices=Uhusiano_kifo)
+
+    def __str__(self):
+        return self.first_name
+
+
+class Marehemu(models.Model):
+    shuhuda=models.ManyToManyField(Shuhuda, verbose_name=("Shhuda_Wa_Kifo"))
     Ndoa = (
         ('ndoa', 'ndoa'),
         ('hajafunga ndoa', 'hajafunga ndoa'),
@@ -49,14 +58,15 @@ class COD(models.Model):
     kufa = models.DateField(default=timezone.now)
     mahali = models.CharField(max_length=255, choices=Mahali)
     maelezo = models.TextField()
-    
+ 
     def __str__(self):
-        return self.jina_kwanza
-    
+       return self.jina_kwanza
 
-class CODWithSababu(COD):
+
+    
+class Sababu(models.Model):
+    Marehemu=models.OneToOneField(Marehemu, verbose_name=("Sababu_Ya_Kifo"), on_delete=models.CASCADE)
     sababu = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.jina_kwanza
-
+       return self.sababu

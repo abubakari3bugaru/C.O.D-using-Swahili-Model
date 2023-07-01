@@ -1,8 +1,6 @@
 {% extends 'questionnaire/main.html'%}
 {% block content %}
-
-<form method="POST" action="{% url 'prediction:save' %}">
-  {% csrf_token %}
+<div class="row">
     <div class="cotainer-centre mt-5">
         <table  class="table  table-striped">
             <h4 class="text-center mb-3"><b>Taariza Za Marehemu</b></h4>
@@ -16,7 +14,7 @@
                   <th>Mahali</th>
                   <th>Maelezo</th>
                   <th>Sababu</th>
-                  <th>Asilimia</th>
+                  <th>Zinginezo</th>
                 </tr>
             </thead>
             <tbody>
@@ -41,25 +39,18 @@
             {% endif %}
               </td>
               </tr>
-              <tr>
-              <td>
-                  <button onclick="window.location.href='{% url 'prediction:badili' %}';" class="btn btn-secondary">
-                    Badili
-                  </button>
-                </td>
-                <td></td>  
-                <td></td>  
-                <td></td>  
-                <td></td>  
-                <td></td>  
-                <td></td>  
-                <td></td>   
-              <td>
-                <button type="submit" class="btn btn-success">Hifadhi</button>
-              </td>      
-              </tr> 
             </tbody>
-          </table>
-        </form>
+        </table>
+      </div>   
+    </div>  
 
+<div class="row">
+  <div class="col-md-3">
+    <form name="questionnaire" action="{% url 'prediction:badili' %}" method="POST" >
+       {% csrf_token %}
+      <button class="btn btn-secondary">Rudi</button>
+    </form>
+  </div>
+  <div class="col-md-9"></div>
+</div>
 {% endblock %}
