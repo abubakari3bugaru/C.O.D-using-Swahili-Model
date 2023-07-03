@@ -48,9 +48,15 @@
   <div class="col-md-3">
     <form name="questionnaire" action="{% url 'prediction:badili' %}" method="POST" >
        {% csrf_token %}
-      <button class="btn btn-secondary">Rudi</button>
+      <button class="btn btn-secondary">Rudia</button>
     </form>
   </div>
-  <div class="col-md-9"></div>
+  <div class="col-md-7"> </div>
+  <div class="col-md-2">
+    <form name="questionnaire" action="{% url 'prediction:report' %}" method="POST" >
+      {% csrf_token %}
+    <button  class="btn btn-primary">wasilisha</button>
+  </form>
+  </div>
 </div>
 {% endblock %}

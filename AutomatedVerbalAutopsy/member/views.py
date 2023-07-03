@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views import View
 from django.urls import reverse
 import requests
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login ,logout
 from django.contrib import messages
 from django.http import JsonResponse
@@ -46,7 +47,6 @@ class LoginView(View):
         # return render(request, 'registration/login.html')
         return redirect('member:login')
     
-
 
 class RegisterView(View):
     def get(self, request):

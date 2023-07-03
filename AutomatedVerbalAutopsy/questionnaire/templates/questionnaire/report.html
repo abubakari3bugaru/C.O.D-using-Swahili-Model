@@ -1,14 +1,63 @@
 {% extends 'questionnaire/main.html'%}
 {% block content %}
-<ul>
-    {% for cod_with_sababu_obj in cod_with_sababu_data %}
-      <li>Jina Kwanza: {{ cod_with_sababu_obj.jina_kwanza }}</li>
-      <li>Sababu: {{ cod_with_sababu_obj.sababu }}</li>
-      <ul>
-        {% for cod_obj in cod_with_sababu_obj.cod_ptr.all %}
-          <li>Jina Kwanza: {{ cod_obj.jina_kwanza }}</li>
-        {% endfor %}
-      </ul>
-    {% endfor %}
-  </ul>
+    {% if user.is_authenticated %}
+     <div class="cotainer-centre mt-5">
+      <table  class="table  table-striped table-hover">
+        <h4 class="text-center mb-3"><b>Taarifa Zilizokusanywa</b></h4>
+            <thead>
+                <tr>
+                    <th>No:</th>
+                    <th>Marehemu</th>
+                    <th>Jinsia</th>
+                    <th>Kifo</th>
+                    <th>Ushahidi</th>
+                    <th>Sababu</th>
+                    <th>Pakua cheti</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for marehemu in combined_data.marehemu_values %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ marehemu.jina_kwanza }} {{ marehemu.jina_pili }} {{ marehemu.jina_mwisho }}</td>
+                    <td>{{ marehemu.jinsia }}</td>
+                    <td>{{ marehemu.kufa }}</td>
+                    <td>{{ marehemu.maelezo }}</td>
+                    <td>
+                        {% for sababu in combined_data.sababu_values %}
+                            {% if sababu.Marehemu == marehemu %}
+                                {{ sababu.sababu }}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <a href="{% url 'prediction:download_report' marehemu.id %}" class="btn btn-primary">Pakua Cheti</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            
+            <div class="pagination">
+                <span class="step-links">
+                    {% if combined_data.marehemu_values.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ combined_data.marehemu_values.previous_page_number }}">previous</a>
+                    {% endif %}
+            
+                    <span class="current-page">{{ combined_data.marehemu_values.number }}</span>
+            
+                    {% if combined_data.marehemu_values.has_next %}
+                        <a href="?page={{ combined_data.marehemu_values.next_page_number }}">next</a>
+                        <a href="?page={{ combined_data.marehemu_values.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        </table>            
+    
+        {% else %}
+        <p>Please log in to access this page.</p>
+       
+    {% endif %}
+        
+    
 {% endblock %}

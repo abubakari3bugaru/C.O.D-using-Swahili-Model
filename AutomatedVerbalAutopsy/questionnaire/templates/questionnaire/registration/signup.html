@@ -3,14 +3,14 @@
 {% block content %}
 
 
-    <div class="card p-3">
-      <div class="m-3 mb-2">
+  <div class="card p-3">
+     <div class="m-3 mb-2">
         <img src="{% static 'questionnaire/images/logo.png' %}" alt="Logo" style="width:100px; height:100px;">
       </div>
       <div class="card-title">
         <h4>Register Please</h4>
       </div>    
-      <div class="card-body">
+    <div class="card-body">
         <div class="form-group p5">
           <input type="number" class="form-control" id="card" name="card_no" placeholder="card number.."><br>
           <input type="text" class="form-control" id="fullField" name="fullname" placeholder="full name"><br>
@@ -34,11 +34,12 @@
         }
       }, 5000);
     </script>
-      </div>
-        <input type="submit" value="Register" class="btn btn-block btn-primary" onclick="showLoadingSpinner()">
-    </div> 
+        <input type="submit" value="Register" class="btn btn-block btn-primary" onclick="showLoadingSpinner()"><br><br>
+        <a href="{% url 'member:login' %}"> Login</a>
+    </div>
+    </div>
+  </div>
     <p class="mt-5 mb-3 text-muted">&copy; 2023</p>
-  
     <script src="{% static 'js/register.js' %}"></script>
    
 

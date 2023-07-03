@@ -8,9 +8,8 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
+from django.core.paginator import Paginator
 from .models import Shuhuda,Marehemu,Sababu
-
-
 
 
 @login_required
@@ -48,6 +47,7 @@ def cod(request, message=None):
     
     return render(request, 'questionnaire/form.html', {'username': username, 'message': message})
 
+@login_required
 def maelezo(request, message=None):
     email=request.user.email
     all_maelezo = Marehemu.objects.all()
@@ -58,60 +58,79 @@ def maelezo(request, message=None):
     username = request.user.username 
     return render(request, 'questionnaire/dashboard.html', {'page_obj': page_obj, 'username': username, 'row_count': row_count})
 
-
-# def dashboard(request, message=None):
-#     username = request.user.username
-#     cod_data = CODWithSababu.objects.all()
-#     cod_values = []
-
-#     for cod_with_sababu in cod_data:
-#         cod_values.append({
-#             'jina_kwanza': cod_with_sababu.jina_kwanza,
-#             'jina_pili': cod_with_sababu.jina_pili,
-#             'jina_mwisho': cod_with_sababu.jina_mwisho,
-#             'place': cod_with_sababu.place,
-#             'mahali': cod_with_sababu.region,
-#             'maelezo': cod_with_sababu.maelezo,
-#             'sababu': cod_with_sababu.sababu,
-#         })
-
-#     return render(request, 'questionnaire/dashboard.html', {'cod_data': cod_values, 'username': username})
-
+@login_required
 def dashboard(request):
-    # Retrieve the latest CODWithSababu object and its associated COD object
-    cod=Marehemu.objects.latest('id')
-    cod_with_sababu = Sababu.objects.latest('id')
-    cod = cod_with_sababu.cod
-    
-    # Retrieve the desired fields from both models
-    jina_kwanza = cod.jina_kwanza
-    jina_pili = cod.jina_pili
-    jina_mwisho = cod.jina_mwisho
-    place = cod.place
-    region = cod.region
-    maelezo = cod.maelezo
-    sababu = cod_with_sababu.sababu
-    
-    # Prepare the data to pass to the template
-    data = {
-        'jina_kwanza': jina_kwanza,
-        'jina_pili': jina_pili,
-        'jina_mwisho': jina_mwisho,
-        'place': place,
-        'region': region,
-        'maelezo': maelezo,
-        'sababu': sababu,
-    }
-    
-    return render(request, 'questionnaire/dashboard.html', data)    
+    sababu_values = Sababu.objects.all().order_by('-id')
+    marehemu_values = Marehemu.objects.select_related('sababu').prefetch_related('shuhuda').order_by('-id')
 
+    search_query = request.GET.get('query')
+    if search_query:
+        marehemu_values = marehemu_values.filter(jina_kwanza__icontains=search_query)
+
+    # Create a paginator object with the desired number of items per page
+    paginator = Paginator(marehemu_values, 10)  # Show 10 items per page
+
+    # Get the current page number from the request
+    page_number = request.GET.get('page')
+
+    # Get the Page object for the current page
+    page_obj = paginator.get_page(page_number)
+
+    combined_data = {
+        'sababu_values': sababu_values,
+        'marehemu_values': page_obj,  # Pass the current page's object
+    }
+
+    return render(request, 'questionnaire/dashboard.html', {'combined_data': combined_data})
+
+
+# # def dashboard(request):
+#     sababu_values = Sababu.objects.all().order_by('-id')
+#     marehemu_values = Marehemu.objects.select_related('sababu').prefetch_related('shuhuda').order_by('-id')
+
+#     search_query = request.GET.get('query')
+#     if search_query:
+#         marehemu_values = marehemu_values.filter(jina_kwanza__icontains=search_query)
+
+#     combined_data = {
+#         'sababu_values': sababu_values,
+#         'marehemu_values': marehemu_values,
+#     }
+
+#     return render(request, 'questionnaire/dashboard.html', {'combined_data': combined_data})
+
+# # def dashboard(request):
+#     sababu_values = Sababu.objects.all().order_by('-id')
+#     marehemu_values = []
+#     shuhuda_values = []
+
+#     for sababu in sababu_values:
+#         marehemu = sababu.Marehemu  # Access the related Marehemu object
+#         marehemu_values.append(marehemu)
+#         shuhuda_values.append(marehemu.shuhuda.all())
+
+#     # paginator = Paginator(marehemu_values, 10)  
+
+#     # page_number = request.GET.get('page')
+#     # page_obj = paginator.get_page(page_number)
+
+#     combined_data = {
+#         # 'marehemu_values': page_obj,
+#         'sababu_values': sababu_values,
+#         'marehemu_values': marehemu_values,
+#         'shuhuda_values': shuhuda_values
+#     }
+
+#     return render(request, 'questionnaire/dashboard.html', {'combined_data': combined_data})
+
+  
+@login_required
 def profile(request,message=None):
      username = request.user.username 
      email=request.user.email
      first_name =request.user.first_name
      last_name = request.user.last_name
      return render(request, 'questionnaire/profile.html',{'username': username, 'message': message, 'email':email,'first_name':first_name,'last_name':last_name})
-
 
 
 @login_required
@@ -137,7 +156,8 @@ def change_password(request):
         else:
             messages.error(request, 'Incorrect current password.')
 
-    return redirect('/questionnaire/profile')  # Redirect to the user's profile page
+    return redirect('/questionnaire/profile')  
+
 
 def password(request):
     username = request.user.username 

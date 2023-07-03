@@ -4,6 +4,10 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 import pickle
+import os
+from django.contrib.auth.decorators import login_required
+from django.templatetags.static import static
+from django.core.paginator import Paginator
 from django.http import HttpResponseBadRequest
 from sklearn.metrics import accuracy_score,confusion_matrix
 from sklearn import metrics
@@ -12,14 +16,17 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 from .forms import PredictionForm
 from io import BytesIO
+from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from questionnaire.models import Shuhuda,Marehemu,Sababu
 from django.http import FileResponse
 import io
+from django.utils import timezone
 from reportlab.lib.units import inch
 
 # Define Constant
+
 
 
 MODELFILE = settings.MODEL_DIR + '/naive_bayes.pkl'
@@ -32,51 +39,53 @@ with open(MODELFILE, 'rb') as f:
 with open(VECFILE, 'rb') as f:
     vectorizer = pickle.load(f)  
 
-def index(request):
-    if request.method == 'POST':
-        #Get user inputs
-        inputs = request.POST.get('inputs')
+# @login_required
+# def index(request):
+#     if request.method == 'POST':
+#         #Get user inputs
+#         inputs = request.POST.get('inputs')
 
-        # Check if inputs is a string
-        if isinstance(inputs, str):
-            # Convert inputs as a list
-            inputs = [inputs]
-        # Load the ML model
-        with open(MODELFILE, 'rb') as f:
-            model = pickle.load(f)
+#         # Check if inputs is a string
+#         if isinstance(inputs, str):
+#             # Convert inputs as a list
+#             inputs = [inputs]
+#         # Load the ML model
+#         with open(MODELFILE, 'rb') as f:
+#             model = pickle.load(f)
 
-        # Generate prediction using the model and user inputs
-        prediction = model.predict(inputs)
+#         # Generate prediction using the model and user inputs
+#         prediction = model.predict(inputs)
 
 
-        # Pass the prediction to the template
-        context = {'prediction': prediction}
+#         # Pass the prediction to the template
+#         context = {'prediction': prediction}
         
-        return render(request, 'prediction/index.html', context)
-    return render(request, 'prediction/index.html')
+#         return render(request, 'prediction/index.html', context)
+#     return render(request, 'prediction/index.html')
 
-def predict_result(request,message=None):
-    username = request.user.username
-    # Extract the disease labels from the ground truth data
-    inputs =Marehemu.objects.order_by('-id').values_list('maelezo', flat=True).first()
+# def predict_result(request,message=None):
+#     username = request.user.username
+#     # Extract the disease labels from the ground truth data
+#     inputs =Marehemu.objects.order_by('-id').values_list('maelezo', flat=True).first()
 
-    # row_count = all_maelezo.count()
-    other_field= Marehemu.objects.all().order_by('-id').first()
+#     # row_count = all_maelezo.count()
+#     other_field= Marehemu.objects.all().order_by('-id').first()
    
-    # Check if inputs is a string
-    if isinstance(inputs, str):
-        inputs = [inputs]
+#     # Check if inputs is a string
+#     if isinstance(inputs, str):
+#         inputs = [inputs]
     
-    # Load the ML model
-    with open(MODELFILE, 'rb') as f:
-        model = pickle.load(f)
+#     # Load the ML model
+#     with open(MODELFILE, 'rb') as f:
+#         model = pickle.load(f)
     
-    # Generate prediction using the model and user inputs
-    prediction = model.predict(inputs)
-    prediction = str(prediction[0]) 
-    inputs = str(inputs[0]) 
-    return render(request, 'prediction/success.html',{'all_maelezo': inputs,  'username':username, 'other_field':other_field, 'prediction':prediction })
+#     # Generate prediction using the model and user inputs
+#     prediction = model.predict(inputs)
+#     prediction = str(prediction[0]) 
+#     inputs = str(inputs[0]) 
+#     return render(request, 'prediction/success.html',{'all_maelezo': inputs,  'username':username, 'other_field':other_field, 'prediction':prediction })
 
+@login_required
 def delete_questionnaire(request):
     username = request.user.username
     marehemu_to_delete = Marehemu.objects.latest('id')
@@ -94,6 +103,7 @@ def delete_questionnaire(request):
     return render(request, 'prediction/success.html', context)
 
 
+@login_required
 def predict_disease(request):
     username = request.user.username
     inputs =Marehemu.objects.order_by('-id').values_list('maelezo', flat=True).first()
@@ -135,7 +145,7 @@ def predict_disease(request):
     return render(request, 'prediction/success.html', context, )
 
 
-
+@login_required
 def success(request, message=None):
     username = request.user.username 
     cod_with_sababu_data = Sababu.objects.all()
@@ -147,75 +157,96 @@ def success(request, message=None):
 
 
 
+# def report(request):
+    sababu_values = Sababu.objects.all().order_by('-id')
+    marehemu_values = []
+    shuhuda_values = []
+
+    for sababu in sababu_values:
+        marehemu = sababu.Marehemu  # Access the related Marehemu object
+        marehemu_values.append(marehemu)
+        shuhuda_values.append(marehemu.shuhuda.all())
+
+    combined_data = {
+        'sababu_values': sababu_values,
+        'marehemu_values': marehemu_values,
+        'shuhuda_values': shuhuda_values
+    }
+
+    return render (request, 'questionnaire/report.html', {'combined_data': combined_data})
 
 
-# def generate_report(request):
-#     # Get the causes of death data
-#     causes_of_death = COD.objects.all()
+@login_required
+def report(request):
+    sababu_values = Sababu.objects.all().order_by('-id')
+    marehemu_values = []
+    shuhuda_values = []
 
-#     # Create a PDF document
-#     buffer = BytesIO()
-#     pdf = canvas.Canvas(buffer)
+    for sababu in sababu_values:
+        marehemu = sababu.Marehemu  # Access the related Marehemu object
+        marehemu_values.append(marehemu)
+        shuhuda_values.append(marehemu.shuhuda.all())
 
-#     # Set up the PDF document
-#     pdf.setTitle("Causes of Death Report")
-#     pdf.setFont("Helvetica", 12)
+    search_query = request.GET.get('query')
+    if search_query:
+        marehemu_values = Marehemu.objects.filter(jina_kwanza__icontains=search_query)
 
-#     # Write the causes of death data in the PDF
-#     y = 750  # Initial y-coordinate
-#     for cause in causes_of_death:
-#         pdf.drawString(50, y, cause.maelezo)
-#         y -= 20
+    # Create a paginator object with the desired number of items per page
+    paginator = Paginator(marehemu_values, 10)  # Show 10 items per page
 
-#     # Save the PDF document
-#     pdf.showPage()
-#     pdf.save()
+    # Get the current page number from the request
+    page_number = request.GET.get('page')
 
-#     # Get the PDF content from the buffer
-#     buffer.seek(0)
-#     pdf_content = buffer.getvalue()
-#     buffer.close()
+    # Get the Page object for the current page
+    page_obj = paginator.get_page(page_number)
 
-#     # Create an HTTP response with the PDF content as a file attachment
-#     response = HttpResponse(content_type='application/pdf')
-#     response['Content-Disposition'] = 'attachment; filename="causes_of_death_report.pdf"'
-#     response.write(pdf_content)
+    combined_data = {
+        'sababu_values': sababu_values,
+        'marehemu_values': page_obj,  # Pass the current page's object
+        'shuhuda_values': shuhuda_values
+    }
 
-#     return response
+    return render(request, 'questionnaire/report.html', {'combined_data': combined_data})
 
 
 
-def generate_report(request):
-    # Get the causes of death data
-    causes_of_death = Sababu.objects.all()
+@login_required
+def download_report(request, marehemu_id): 
+    current_date = timezone.now().date()
+    marehemu = get_object_or_404(Marehemu, id=marehemu_id)
+    shuhuda= get_object_or_404(Shuhuda ,id=marehemu_id)
 
-    # Create a PDF document
-    buffer = BytesIO()
-    pdf = canvas.Canvas(buffer, pagesize=letter)
+    # Create a response object with PDF content type
+    response = HttpResponse(content_type='application/pdf')
 
-    # Set up the PDF document
-    pdf.setTitle("Causes of Death Report")
-    pdf.setFont("Helvetica", 12)
+    # Set the filename for the PDF
+    response['Content-Disposition'] = 'attachment; filename="death_certificate.pdf"'
 
-    # Write the causes of death data in the PDF
-    y = 750  # Initial y-coordinate
-    for cause in causes_of_death:
-        pdf.drawString(60, 5, cause.jina_kwanza)
-        pdf.drawString(65, 5, cause.jina_pili)
-        pdf.drawString(70, 5, cause.jina_mwisho)
-        pdf.drawString(50, -20, cause.maelezo)
-      
+    # Create a PDF canvas
+    
+    p = canvas.Canvas(response)
+ 
+    # Set the PDF content
+    p.setFont("Helvetica", 12)
+    p.drawString(200, 800, "University Of Dar-es-Salaam")
+    p.drawString(150, 780, "Collage of Information and Communication Technology")
+    p.drawString(200, 760, "Cause of Death Manipulation")
+    p.drawString(180, 740, "-------------------------------------------------")
+    p.drawString(220, 700, "DEATH CERTIFICATE")
+    p.drawString(30, 670, "This is to verify that the following information has been obtained from the verbal autopsy of the deceased ")
+    p.drawString(20, 650, f"registered under caretaker,{shuhuda.first_name} {shuhuda.middle_name} {shuhuda.last_name} with corresponds deceased's information below.")
+    p.drawString(20, 620, f"Full Name: {marehemu.jina_kwanza} {marehemu.jina_pili} {marehemu.jina_mwisho} ")
+    p.drawString(250, 620, f"Place of Death: {shuhuda.place}, {shuhuda.region}")
+    p.drawString(20, 600, f"Sex: {marehemu.jinsia}")
+    p.drawString(250, 600, f"Date of Birth: {marehemu.kuzaliwa}")
+    p.drawString(20, 580, f"Date of Death: {marehemu.kufa}")
+    p.drawString(250, 580, f"Place of Death: {marehemu.mahali}")
+    p.drawString(20, 560, f"Cause of Death: {marehemu.sababu.sababu}")
+    p.drawString(20, 520, f"Date: {current_date}")
+    
+    # Save the PDF
+    p.showPage()
+    p.save()
 
-    # Save the PDF document
-    pdf.showPage()
-    pdf.save()
-
-    # Get the PDF content from the buffer
-    buffer.seek(0)
-    pdf_content = buffer.getvalue()
-    buffer.close()
-
-    # Render a preview page before download
-    context = {'pdf_content': pdf_content}
-    return render(request, 'prediction/report.html', context)
+    return response
 
