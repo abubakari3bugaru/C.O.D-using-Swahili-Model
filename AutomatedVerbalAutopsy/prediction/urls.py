@@ -3,12 +3,10 @@ from . import views
 
 app_name = 'prediction'
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('predict/', views.predict_result, name='predict'),
+    # path('', views.index, name='index'),
+    path('predict/', views.predict_disease, name='predict'),
     path('success/', views.success, name='success'),
-    # path('save/', views.save_prediction, name='save'),
-    # path('questionnaire/', views.save, name='questionnaire'),
-    # path('predict/result/', views.predict_result, name='predict_result'),  # Updated URL pattern
     path('badili/', views.delete_questionnaire, name='badili'),
-    path('ripoti/', views.generate_report, name='ripoti'),
+    path('download/<int:marehemu_id>/', views.download_report, name='download_report'),
+    path('report/', views.report, name='report'),
 ]

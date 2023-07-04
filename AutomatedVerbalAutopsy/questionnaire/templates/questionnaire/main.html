@@ -15,6 +15,11 @@
 
     <!-- Bootstrap core CSS -->
     {% load static %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{% static 'questionnaire/css/boostrap_min.css' %}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -61,7 +66,7 @@
     <div class="btn-group bg-light mr-3">
       <div class="btn-group">
       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-        <span class="fa fa-user white-icon ">&nbsp;<i class="caret"></i></span>
+        <span class="fa fa-user  ">&nbsp;<i class="caret"></i></span>
         <span class="sr-only">Toggle Dropdown</span>
       </button>
       <ul class="dropdown-menu" role="menu" style="right: 0; left: auto;">
@@ -71,10 +76,7 @@
           <a class="dropdown-item" > {{ username }}</a>
           
         </li>
-        <li>
-          <a class="dropdown-item" >{{ email }}</a>
           {% endif %}
-        </li>
         <li><hr class="dropdown-divider"></li>
         <li>
           <a class="dropdown-item" href="{% url 'questionnaire:profile' %}">View Profile</a>
@@ -105,35 +107,23 @@
       </h6>
         <ul class="nav flex-column mx-4">
           <li class="nav-item">
-            <a class="nav-link " aria-current="page" href="/questionnaire/dashboard/">
-              <span data-feather="home"></span>
-              Nyumbani
+            <a class="nav-link" aria-current="page" href="/questionnaire/dashboard/">
+              <i class="fa fa-home"></i><span> Nyumbani</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="/questionnaire/submit-form/">
-              <span data-feather="file-text"></span>
-              Fomu Za Maelezo
+            <a class="nav-link " href="/questionnaire/submit-form/">
+              <i class="fa fa-file-text"></i><span> Fomu Za Maelezo</span>
             </a>
-          </li>
-          <li class="nav-item">
-            <a  class="nav-link" href="">
-              <i class="fa fa-file-pdf-o"></i><span>Reports</span></a>
           </li>
         </ul>
-     
-          
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4  mx-2 mb-1 text-muted">
           <span>Taarifa na Ripoti</span>
-          <a class="link-secondary" href="#" aria-label="Add a new report">
-            <span data-feather="plus-circle"></span>
-          </a>
         </h6>
         <ul class="nav flex-column mx-3 mb-2">
           <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              Mwezi Huu
+            <a class="nav-link" href="/prediction/report/">
+              <i class="fa fa-file-pdf-o"></i><span> Cheti</span>
             </a>
           </li>
         </ul>
@@ -145,7 +135,7 @@
  
       {% block content%} 
       
-      
+      {% include 'prediction/form.html' %}
       
       {% endblock %}
     </main>

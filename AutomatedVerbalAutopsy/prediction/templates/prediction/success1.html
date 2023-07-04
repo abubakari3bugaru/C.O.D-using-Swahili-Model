@@ -1,7 +1,16 @@
-{% extends 'prediction/main.html'%}
+{% extends 'questionnaire/main.html'%}
 {% block content %}
-<form method="post" action="{% url 'prediction:success' %}">
-    {% csrf_token %}
     <p>You have successful insert the data</p>
-</form>
+    <ul>
+        {% for cod_with_sababu_obj in cod_with_sababu_data %}
+          <li>Jina Kwanza: {{ cod_with_sababu_obj.jina_kwanza }}</li>
+          <li>Sababu: {{ cod_with_sababu_obj.sababu }}</li>
+          <ul>
+            {% for cod_obj in cod_with_sababu_obj.cod_ptr.all %}
+              <li>Jina Kwanza: {{ cod_obj.jina_kwanza }}</li>
+              <!-- Display other fields of COD model as needed -->
+            {% endfor %}
+          </ul>
+        {% endfor %}
+      </ul>
 {% endblock %}

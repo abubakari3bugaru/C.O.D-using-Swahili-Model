@@ -1,9 +1,6 @@
 {% extends 'questionnaire/main.html'%}
 {% block content %}
-
-{% comment %} {% endcomment %}
-{% comment %} <form method="POST" action="{% url 'prediction:save' %}">
-  {% csrf_token %} {% endcomment %}
+<div class="row">
     <div class="cotainer-centre mt-5">
         <table  class="table  table-striped">
             <h4 class="text-center mb-3"><b>Taariza Za Marehemu</b></h4>
@@ -17,9 +14,7 @@
                   <th>Mahali</th>
                   <th>Maelezo</th>
                   <th>Sababu</th>
-                  <th>Accuracy</th>
-                  <th>ground_truth</th>
-                  <!-- Add more column headers if needed -->
+                  <th>Zinginezo</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,45 +24,39 @@
                 <td >{{ other_field.ndoa }} </td>
                 <td >{{ other_field.kuzaliwa }} </td>
                 <td > {{ other_field.kufa }} </td>
-                <td >{{ other_field.mahali }}</td>
-                <td>{{ all_maelezo }}</td>
+                <td > {{ other_field.mahali }} </td>
+                <td > {{ other_field.maelezo }} </td>
                 <td>
                   {% if prediction %}
                     {{ prediction }}
-                  {% endif %}
-                  
+                 
                     <input type="hidden" name="sababu" value="{{ prediction }}">
-                   
-          
                 </td>
-                <td>{{ accuracy }}</td>
-                <td>{{ ground_truth }}</td>
-              </tr>
-                <td> <button onclick="window.location.href='{% url 'prediction:badili' %}';" class="btn btn-secondary">
-                  Badili
-               </button></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
                 <td>
-                <button type="submit" class="btn btn-success">Hifadhi</button>
-                </td>
-                {% comment %} <td><button  type="submit" class="btn btn-success">Hifadhi</button></td> {% endcomment %}
-              </tr> 
+                {% for disease, score in diseases_scores %}
+                <li>{{ disease }}: {{ score }}%</li>
+            {% endfor %}
+            {% endif %}
+              </td>
+              </tr>
             </tbody>
-          </table>
-          {% if list %}
-          <p> {{ list }}</p>
-          {% endif %}
+        </table>
+      </div>   
+    </div>  
 
-         
-       
-      
-       
-
+<div class="row">
+  <div class="col-md-3">
+    <form name="questionnaire" action="{% url 'prediction:badili' %}" method="POST" >
+       {% csrf_token %}
+      <button class="btn btn-secondary">Rudia</button>
+    </form>
+  </div>
+  <div class="col-md-7"> </div>
+  <div class="col-md-2">
+    <form name="questionnaire" action="{% url 'prediction:report' %}" method="POST" >
+      {% csrf_token %}
+    <button  class="btn btn-primary">wasilisha</button>
+  </form>
+  </div>
+</div>
 {% endblock %}

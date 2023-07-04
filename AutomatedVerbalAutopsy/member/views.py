@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User 
+from django.contrib.auth.models import User
+from .models import UserProfile
 from django.views.decorators.csrf import csrf_protect
 from django.views import View
 from django.urls import reverse
 import requests
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login ,logout
 from django.contrib import messages
 from django.http import JsonResponse
@@ -11,11 +13,10 @@ from django.contrib import auth
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.tokens import default_token_generator
 import uuid
-from .models import Profile
 import json
 from .helpers import send_forget_password_mail
 
-class Login_view(View):
+class LoginView(View):
     def get(self, request):
         return render(request, 'questionnaire/registration/login.html')
     
@@ -30,23 +31,50 @@ class Login_view(View):
             if user:
                 if user.is_active:
                     auth.login(request, user)
-                    messages.success(request, 'Welcome back, ' +user.username +
-                                     ' you are now logged in')
+                    messages.success(request, 'Karibu , ' +user.username +
+                                     ' umefanikiwa kuingia kikamilifu')
                     email = user.email
                     first_name = user.first_name
                     last_name = user.last_name
-                    return redirect('questionnaire:submit_form', message='success',)
+                    return redirect('questionnaire:submit_form', message='success')
                 messages.error(request,'Your account is not active')
                
             else:
-                messages.error(request, 'Invalid credentials, please try again')
+                messages.error(request, 'Nywira yako si sahihi, Tafadhali jaribu tena')
            
         else:    
-             messages.error(request, 'You do not have an account')
+             messages.error(request, 'Hauna akaunti')
         # return render(request, 'registration/login.html')
         return redirect('member:login')
     
 
+class RegisterView(View):
+    def get(self, request):
+        return render(request, 'questionnaire/registration/signup.html')
+
+    def post(self, request):
+        user_card = request.POST['card_no']
+        full_name = request.POST['fullname']
+        username = request.POST['username']
+        phone_number = request.POST['phone_number']
+        password = request.POST['password']
+        
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Username is already taken. Please choose a different one.')
+            return redirect('member:register')
+
+        # Create the user
+        user = User.objects.create_user(username=username, password=password)
+        user.first_name = full_name
+        user.save()
+
+        # Save additional user information in a separate model or user profile if needed
+        # Example:
+        profile = UserProfile.objects.create(user=user, user_card=user_card, phone_number=phone_number)
+        profile.save()
+    
+        messages.success(request, 'Registration successful. You can now login.')
+        return redirect('member:login',message='success')
 
 
 class LogoutView(View):

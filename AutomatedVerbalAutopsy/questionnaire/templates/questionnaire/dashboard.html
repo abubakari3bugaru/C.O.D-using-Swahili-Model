@@ -1,104 +1,64 @@
 {% extends 'questionnaire/main.html'%}
 
 {% block content%}
-<div class="col-md-12 mb-3 ps-3 pt-3">
-  <div class="row mb-5">
-    
-  <div class="row">
-   
-    <div class="container">
-      <form class="form-inline">
-        <div class="col-md-10">
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <form class="form-inline" id="search-form" onsubmit="searchData(event)">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
           <div class="form-group">
-            <input type="text" class="form-control" style="width: 100%;" placeholder="Tafuta...">
+            <input type="text" class="form-control" style="width: 100%;" placeholder="Tafuta..." id="search-input">
           </div>
         </div>
         <div class="col-md-2">
-          <button type="submit" class="btn backgroung text-light">Tafuta</button>
+          <button type="submit" class="btn background text-light">Tafuta</button>
         </div>
-      </form>      
+      </form>     
     </div>
   </div>
+
     <div class="container mt-4">
       <div class="row">
         <div class="col-md-4">
-          <button type="submit" href="/questionnaire/submit" id="submit-btn"  class="btn btn-secondary p-2">+ Ongeza Fomu</button>
+          <button type="submit" href="{% url 'questionnaire:submit_form' %}"  class="btn btn-secondary p-2">+ Ongeza Fomu</button>
         </div>
         <div class="col-md-8"></div>
     </div>
   </div>
 
-      <script>
-      $(document).ready(function() {
-        $('#submit-btn').click(function() {
-          window.location.href = "{% url 'questionnaire:submit_form' %}";
-        });
+  {% comment %} <div class="container mt-3 mb-5">
+    <canvas id="myChart" ></canvas>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: [
+            {% for item in cod_data %}
+              '{{ item.first_name }}',
+            {% endfor %}
+          ],
+          datasets: [{
+            label: 'Riport Zote',
+            data: [
+              {% for item in cod_data %}
+                {{ item.some_value }},
+              {% endfor %}
+            ],
+            backgroundColor: ['red', 'blue', 'yellow', 'green', 'purple', 'orange']
+          }]
+        },
+        options: {
+          responsive: true
+        }
       });
-      </script>
-        
-        <div class="container mt-3 mb-5">
-          <canvas id="myChart" ></canvas>
-        </div>
-        <script>
-          document.addEventListener('DOMContentLoaded', function() {
-            var ctx = document.getElementById('myChart').getContext('2d');
-            var myChart = new Chart(ctx, {
-              type: 'line',
-              data: {
-                labels: [
-                  {% for item in cod_data %}
-                    '{{ item.first_name }}',
-                  {% endfor %}
-                ],
-                datasets: [{
-                  label: 'Riport Zote',
-                  data: [
-                    {% for item in cod_data %}
-                      {{ item.some_value }},
-                    {% endfor %}
-                  ],
-                  backgroundColor: ['red', 'blue', 'yellow', 'green', 'purple', 'orange']
-                }]
-              },
-              options: {
-                responsive: true
-              }
-            });
-          });
-        </script>
-        
-
-  <div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-3">
-      <div class="card backgroung border-0 rounded-3">
-        <div class="card-body back">
-          <div class="card-title text-center text-light p-3 border-0 rounded-3">Fomu Zilizokusanywa</div>
-          <div class="card-text fs-1 text-center text-light pb-3"><b>{{ cod_data.count }}</b></div>
-        </div>
-      </div>
-    </div>
-    
-
-  <div class="col-md-3">
-    <div class="card backgroung border-0 rounded-3">
-      <div class="card-body bg-secondary">
-        <div class="card-title text-center text-light p-3 border-0 rounded-3">Fomu Zilizokusanywa</div>
-        <div class="card-text fs-1 text-center text-light pb-3"><b>{{ cod_data.count }}</b></div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="col-md-3">
-    <div class="card backgroung border-0 rounded-3">
-      <div class="card-body back">
-        <div class="card-title text-center text-light p-3 border-0 rounded-3">Fomu Zilizokusanywa</div>
-        <div class="card-text fs-1 text-center text-light pb-3"><b>{{ cod_data.count }}</b></div>
-      </div>
-    </div>
-  </div>
-  
-
+    });
+  </script>
+   {% endcomment %}
+ 
   <div class="row mt-5">
     <div class="col-md-1"></div>
     <div class="col-md-11">
@@ -106,46 +66,27 @@
       <h4 class="text-center mb-3"><b>Taarifa Za Shuhuda</b></h4>
         <thead>
           <tr>
-            <th>Jina la Mhojiwa</th>
-            <th>Jina la Kati</th>
-            <th>Jina la mwisho</th>
+            <th>Majina ya Marehemu</th>
             <th>Mahali</th>
-            <th>Mkoa</th>
             <th>Ushahidi</th>
-            <!-- Add more column headers if needed -->
+            <th>Sababu</th>
           </tr>
-      </thead>
-      <tbody>
-        {% for item in cod_data %}
-        <tr>
-          <td>{{ item.first_name }}</td>
-          <td>{{ item.middle_name }}</td>
-          <td>{{ item.last_name }}</td>
-          <td>{{ item.place }}</td>
-          <td>{{ item.region }}</td>
-          <td>{{ item.maelezo }}</td>
-          <!-- Add more columns if needed -->
-        </tr>
-        {% endfor %}
-      </tbody>
-      
-    </table>
+        </thead>
+ <tbody>
+    {% for marehemu in combined_data.marehemu_values %}
+    <tr>
+        <td>{{ marehemu.jina_kwanza }} {{ marehemu.jina_pili }} {{ marehemu.jina_mwisho }}</td>
     
-    <div class="pagination">
-      <span class="step-links">
-        {% if page_obj.has_previous %}
-          <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
+        <td>{{ marehemu.mahali }}</td>
+        <td>{{ marehemu.maelezo }}</td>
+        <td>
+            {{ marehemu.sababu.sababu }}
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+<script src="questionnaire/javascript/search.js"></script>
+</table>
     
-        <span class="current-page">{{ page_obj.number }}</span>
-    
-        {% if page_obj.has_next %}
-          <a href="?page={{ page_obj.next_page_number }}">next</a>
-        {% endif %}
-      </span>
-    </div>
-    
- </div>
- </div>
 </div>
 {% endblock %}

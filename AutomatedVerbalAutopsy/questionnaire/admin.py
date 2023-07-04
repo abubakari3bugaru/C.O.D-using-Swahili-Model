@@ -1,10 +1,6 @@
-
 from django.contrib import admin
-from .models import COD
+from .models import Shuhuda, Marehemu, Sababu
 
-admin.site.register(COD)
-
-class COD(admin.ModelAdmin):
-    list_display = ['id', 'name', 'created_at']
-    list_filter = ['created_at']
-    search_fields = ['name']
+admin.site.register(Shuhuda)
+admin.site.register(Marehemu)
+admin.site.register(Sababu)

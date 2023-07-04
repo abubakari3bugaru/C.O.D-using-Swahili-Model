@@ -8,6 +8,7 @@
 *.pycache
 __pycache__/
 
+
 # These files are not needed inside the root directory
 **.pyc
 **/__pycache__

@@ -2,39 +2,6 @@
 {% block title %} Home {% endblock%} 
 {% block content%}
    
-<!-- Taarifa za Fomu -->
- {% comment %} {% url 'questionnaire:submit_form' %}  {% endcomment %}
- <script>
-  function validateForm() {
-    // Retrieve form inputs
-    var firstName = document.forms["questionnaire"]["firstName"].value;
-    var middleName = document.forms["questionnaire"]["middleName"].value;
-    var lastName = document.forms["questionnaire"]["lastName"].value;
-    var place = document.forms["questionnaire"]["place"].value;
-    var region = document.forms["questionnaire"]["region"].value;
-    var shahidi = document.forms["questionnaire"]["shahidi"].value;
-    var simu = document.forms["questionnaire"]["simu"].value;
-    var uhusiano = document.forms["questionnaire"]["uhusiano"].value;
-    var uhusiano_kipindi_kifo=document.forms["questionnaire"]["jinsia"].value;
-    var jina_kwanza = document.forms["questionnaire"]["jina_kwanza"].value;
-    var jina_pili = document.forms["questionnaire"]["jina_pili"].value;
-    var jina_mwisho = document.forms["questionnaire"]["jina_mwisho"].value;
-    var jinsia = document.forms["questionnaire"]["jinsia"].value;
-    var ndoa = document.forms["questionnaire"]["ndoa"].value;
-    var kuzaliwa = document.forms["questionnaire"]["kuzaliwa"].value;
-    var kufa = document.forms["questionnaire"]["kufa"].value;
-    var mahali = document.forms["questionnaire"]["mahali"].value;
-    var maelezo = document.forms["questionnaire"]["maelezo"].value;
-
-    // Perform validation
-    if (firstName === "" || middleName === "" || lastName === "" || place === "" || region === "" || shahidi === "" || simu === "" ||
-        jina_kwanza === "" || jina_pili === "" || jina_mwisho === "" || jinsia === "" || ndoa === "" || kuzaliwa === "" ||
-        kufa === "" || mahali === "" || maelezo === "") {
-      alert("Please fill in all fields");
-      return false;
-    }
-  }
-</script>
 
 
 
@@ -165,10 +132,6 @@
                               <input class="form-check-input" type="radio" name="uhusiano" id="inlineRadio4" value="Hakuna Uhusiano" required>
                               <label class="form-check-label" for="inlineRadio4">Hakuna Uhusiano</label>
                           </div>
-                          <div class="form-check form-check-inline">
-                              <input class="form-check-input" type="radio" name="uhusiano" id="inlineRadio5" value="Nyingine" required>
-                              <label class="form-check-label" for="inlineRadio5">Nyingine</label>
-                          </div>
                       </div>
                   </div>
                   
@@ -186,10 +149,11 @@
                     </div>
                 </div>
                 
+              </div>
                 
                     <!-- Taarifa za Marehemu    -->
                     <div class="row mb-3">
-                        <div class="col-12 p-1 mb-4 text-light backgroung">
+                        <div class="col-12 p-1 mb-4  mt-3 text-light backgroung">
                      <h4 class="text-center">Taarifa za Marehemu</h4>
                    </div>
             
@@ -306,10 +270,6 @@
                       <div class="form-check form-check-inline">
                           <input class="form-check-input" type="radio" name="mahali" id="radio4" value="Sijui">
                           <label class="form-check-label" for="radio4">Sijui</label>
-                      </div>
-                      <div class="form-check form-check-inline">
-                          <input class="form-check-input" type="radio" name="mahali" id="radio5" value="Nyingine">
-                          <label class="form-check-label" for="radio5">Nyingine</label>
                       </div>
                   </div>
               </div>

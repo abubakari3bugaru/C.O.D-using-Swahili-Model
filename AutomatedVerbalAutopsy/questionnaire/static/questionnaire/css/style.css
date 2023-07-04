@@ -15,3 +15,10 @@
   .white-icon {
     color: white;
   }
+  
+  .nav-item:hover .nav-link {
+    color: #179be8; /* Replace with the desired hover color */
+  }
+  .nav-item .nav-link.active {
+    color: #179be8; /* Replace with the desired active color */
+  }

@@ -3,14 +3,13 @@ from django.http import HttpResponse
 from django.views.generic import View
 from django.contrib import messages
 from django.contrib import auth
-from .models import COD
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
-
-
+from django.core.paginator import Paginator
+from .models import Shuhuda,Marehemu,Sababu
 
 
 @login_required
@@ -18,57 +17,120 @@ def cod(request, message=None):
     email=request.user.email
     username = request.user.username  # Get the authenticated user's username
     if request.method == 'POST':
-        # form = SubmitForm1(request.POST)
-        # if form.is_valid():
-            form_COD = COD(
-                first_name=request.POST['firstName'],   # correction: firstName
-                middle_name=request.POST['middleName'],  # correction: middleName
-                last_name=request.POST['lastName'],  # correction: lastName
+            formShuhuda = Shuhuda(
+                first_name=request.POST['firstName'],   
+                middle_name=request.POST['middleName'],  
+                last_name=request.POST['lastName'],  
                 place=request.POST['place'],
                 region=request.POST['region'],
                 simu=request.POST['simu'],
                 uhusiano=request.POST['uhusiano'],
                 uhusiano_kipindi_kifo=request.POST['uhusiano_kipindi_kifo'],
+            )
+
+            formMarehemu= Marehemu(
                 jina_kwanza=request.POST['jina_kwanza'],
                 jina_pili=request.POST['jina_pili'],
                 jina_mwisho=request.POST['jina_mwisho'],
                 jinsia=request.POST['jinsia'],
                 ndoa=request.POST['ndoa'],
-                kuzaliwa=request.POST['kuzaliwa'],  # correction: kuzaliwa_year
-                kufa=request.POST['kufa'],  # kufa_year
+                kuzaliwa=request.POST['kuzaliwa'],  
+                kufa=request.POST['kufa'], 
                 mahali=request.POST['mahali'],
                 maelezo=request.POST['maelezo']
             )
-            form_COD.save()
+            formShuhuda.save()
+            formMarehemu.save()
+            
+
             return redirect('prediction:predict')
     
     return render(request, 'questionnaire/form.html', {'username': username, 'message': message})
 
+@login_required
 def maelezo(request, message=None):
     email=request.user.email
-    all_maelezo = COD.objects.all()
+    all_maelezo = Marehemu.objects.all()
     paginator = Paginator(all_maelezo, 10)  # Display 10 items per pag
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    row_count = COD.objects.count()
+    row_count = Marehemu.objects.count()
     username = request.user.username 
     return render(request, 'questionnaire/dashboard.html', {'page_obj': page_obj, 'username': username, 'row_count': row_count})
 
+@login_required
+def dashboard(request):
+    sababu_values = Sababu.objects.all().order_by('-id')
+    marehemu_values = Marehemu.objects.select_related('sababu').prefetch_related('shuhuda').order_by('-id')
 
-def dashboard(request, message=None):
-    username = request.user.username 
-    cod_data = COD.objects.all()  
-    return render(request, 'questionnaire/dashboard.html', {'cod_data': cod_data,'username': username, 'message': message})
+    search_query = request.GET.get('query')
+    if search_query:
+        marehemu_values = marehemu_values.filter(jina_kwanza__icontains=search_query)
 
-    
+    # Create a paginator object with the desired number of items per page
+    paginator = Paginator(marehemu_values, 10)  # Show 10 items per page
 
+    # Get the current page number from the request
+    page_number = request.GET.get('page')
+
+    # Get the Page object for the current page
+    page_obj = paginator.get_page(page_number)
+
+    combined_data = {
+        'sababu_values': sababu_values,
+        'marehemu_values': page_obj,  # Pass the current page's object
+    }
+
+    return render(request, 'questionnaire/dashboard.html', {'combined_data': combined_data})
+
+
+# # def dashboard(request):
+#     sababu_values = Sababu.objects.all().order_by('-id')
+#     marehemu_values = Marehemu.objects.select_related('sababu').prefetch_related('shuhuda').order_by('-id')
+
+#     search_query = request.GET.get('query')
+#     if search_query:
+#         marehemu_values = marehemu_values.filter(jina_kwanza__icontains=search_query)
+
+#     combined_data = {
+#         'sababu_values': sababu_values,
+#         'marehemu_values': marehemu_values,
+#     }
+
+#     return render(request, 'questionnaire/dashboard.html', {'combined_data': combined_data})
+
+# # def dashboard(request):
+#     sababu_values = Sababu.objects.all().order_by('-id')
+#     marehemu_values = []
+#     shuhuda_values = []
+
+#     for sababu in sababu_values:
+#         marehemu = sababu.Marehemu  # Access the related Marehemu object
+#         marehemu_values.append(marehemu)
+#         shuhuda_values.append(marehemu.shuhuda.all())
+
+#     # paginator = Paginator(marehemu_values, 10)  
+
+#     # page_number = request.GET.get('page')
+#     # page_obj = paginator.get_page(page_number)
+
+#     combined_data = {
+#         # 'marehemu_values': page_obj,
+#         'sababu_values': sababu_values,
+#         'marehemu_values': marehemu_values,
+#         'shuhuda_values': shuhuda_values
+#     }
+
+#     return render(request, 'questionnaire/dashboard.html', {'combined_data': combined_data})
+
+  
+@login_required
 def profile(request,message=None):
      username = request.user.username 
      email=request.user.email
      first_name =request.user.first_name
      last_name = request.user.last_name
      return render(request, 'questionnaire/profile.html',{'username': username, 'message': message, 'email':email,'first_name':first_name,'last_name':last_name})
-
 
 
 @login_required
@@ -94,7 +156,8 @@ def change_password(request):
         else:
             messages.error(request, 'Incorrect current password.')
 
-    return redirect('/questionnaire/profile')  # Redirect to the user's profile page
+    return redirect('/questionnaire/profile')  
+
 
 def password(request):
     username = request.user.username 
