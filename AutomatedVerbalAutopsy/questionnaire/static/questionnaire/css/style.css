@@ -16,9 +16,15 @@
     color: white;
   }
   
+  .nav-item{
+    color: #020a0e; 
+  }
   .nav-item:hover .nav-link {
-    color: #179be8; /* Replace with the desired hover color */
+    color: #179be8; 
   }
   .nav-item .nav-link.active {
-    color: #179be8; /* Replace with the desired active color */
+    color: #179be8; 
   }
+
+ 
+  

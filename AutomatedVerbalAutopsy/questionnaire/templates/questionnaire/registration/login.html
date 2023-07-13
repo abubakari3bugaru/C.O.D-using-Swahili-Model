@@ -46,10 +46,10 @@
             <input type="checkbox" value="remember-me"> Remember me
           </label>
         </div> -->
-      <a href="/member/forget_password/">forgot password?</a>
+      {% comment %} <a href="{% url 'member:forget_password' %}">forgot password?</a> {% endcomment %}
       </div>
         <input type="submit" value="Login" class="btn btn-block btn-primary"><br>
-        <a href="{% url 'member:register' %}">Please register!</a>
+        {% comment %} <a href="{% url 'member:register' %}">Please register!</a> {% endcomment %}
     </div>
    
     

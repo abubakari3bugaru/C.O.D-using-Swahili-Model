@@ -15,7 +15,10 @@
                     {% csrf_token %}
                     
                 <table class="table table-bordered table-hover">
-    
+                    <tr>
+                        <th>Full Name</th>
+                        <td><input type="text" name="username" value="{{ first_name }} {{ last_name }}"></td>
+                    </tr>
                      <tr>
                         <th>User Name</th>
                         <td><input type="text" name="username" value="{{ username }}"></td>
@@ -28,7 +31,7 @@
 
             <tr>
                 <td colspan="2">
-                    <button  class="btn btn-primary" type="submit">Update Profile</button>
+                    <button  class="btn btn-primary" type="submit">Save</button>
                 </td>
             </form>
         </div>
