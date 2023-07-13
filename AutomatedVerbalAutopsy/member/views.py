@@ -5,6 +5,13 @@ from django.views.decorators.csrf import csrf_protect
 from django.views import View
 from django.urls import reverse
 import requests
+
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_decode , urlsafe_base64_encode
+from django.utils.encoding import force_bytes,force_str
+from django.core.mail import EmailMessage
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login ,logout
 from django.contrib import messages
@@ -14,7 +21,19 @@ from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.tokens import default_token_generator
 import uuid
 import json
+from .tokens import account_activator_token
 from .helpers import send_forget_password_mail
+
+def activateEmail(request,user,to_email):
+    mail_subject = "Activate your user account"
+    message= render_to_string("activate_account.html",{
+        'user':user.username,
+        'domain':get_current_site(request).domain,
+        'uid':urlsafe_base64_decode(force_bytes(user.pk)),
+        'token':account_activator_token.make_token(user),
+        'protocol':'https' if request.is_secure() else 'http'
+    })
+    messages.success()
 
 class LoginView(View):
     def get(self, request):

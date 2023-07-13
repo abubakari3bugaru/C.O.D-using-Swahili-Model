@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'plotly'
 ]
 
 MIDDLEWARE = [
@@ -159,9 +160,16 @@ MESSAGE_TAGS = {
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp-relay.sendinblue.com'
+EMAIL_HOST = 'smtp-gmail.com'
+EMAIL_FROM = 'elishaellyclif@gmail.com'
+EMAIL_HOST_USER = 'elishaellyclif@gmail.com' 
+EMAIL_HOST_PASSWORD = 'nyqxzsxrqplmdtsx' 
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'Elisha Massawe'  # Your Sendinblue SMTP username
-EMAIL_HOST_PASSWORD = 'z0isodl2wljeuwq4w8oz3udqqp3qdon3'  # Your Sendinblue API key
-DEFAULT_FROM_EMAIL = 'elishaellyclif@gmail.com'  # Sender's email address
+DEFAULT_FROM_EMAIL = 'elishaellyclif@gmail.com' 
+
+PASSWORD_RESERT_TIMEOUT= 14400
+
+LOGIN_REDIRECT_URL='submit_form'
+LOGIN_URL='login'
+

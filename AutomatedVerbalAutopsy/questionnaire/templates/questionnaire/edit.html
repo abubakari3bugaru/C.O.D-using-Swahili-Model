@@ -1,0 +1,13 @@
+{% extends 'questionnaire/main.html'%}
+
+{% block content %}
+  <h1>Badili Sababu</h1>
+  <form method="POST" >
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="new_sababu"> Sababu Mpya:</label>
+      <input type="text" name="new_sababu" class="form-control" id="new_sababu" value="{{ object_to_modify.sababu }}">
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+  </form>
+{% endblock %}

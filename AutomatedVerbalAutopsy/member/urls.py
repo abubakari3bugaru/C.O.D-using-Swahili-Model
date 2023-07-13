@@ -11,6 +11,6 @@ urlpatterns = [
     path('register', RegisterView.as_view(), name='register'),
     path('register/<str:message>/', RegisterView.as_view(), name='register'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    path('forget_password/', password_reset_view, name='forget-password'),
+    path('forget_password/', password_reset_view, name='forget_password'),
     path('change_password/<token>/', changePassword, name='change-password'),
 ]

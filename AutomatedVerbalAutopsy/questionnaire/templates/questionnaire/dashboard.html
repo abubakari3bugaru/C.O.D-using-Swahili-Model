@@ -1,92 +1,60 @@
 {% extends 'questionnaire/main.html'%}
+{% load static %}
 
 {% block content%}
-  <div class="row mt-5">
-    <div class="col-md-12">
-      <form class="form-inline" id="search-form" onsubmit="searchData(event)">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
-          <div class="form-group">
-            <input type="text" class="form-control" style="width: 100%;" placeholder="Tafuta..." id="search-input">
-          </div>
-        </div>
-        <div class="col-md-2">
-          <button type="submit" class="btn background text-light">Tafuta</button>
-        </div>
-      </form>     
+{% if user.is_authenticated  %}
+ <div class="row mt-5">
+  <div class="row">
+    <div class="col-md-2">
+      <button id="add-form-btn" id="add-form-btn"  class="btn btn-secondary p-2">+ Ongeza Fomu</button>
     </div>
-  </div>
-
-    <div class="container mt-4">
-      <div class="row">
-        <div class="col-md-4">
-          <button type="submit" href="{% url 'questionnaire:submit_form' %}"  class="btn btn-secondary p-2">+ Ongeza Fomu</button>
-        </div>
-        <div class="col-md-8"></div>
-    </div>
-  </div>
-
-  {% comment %} <div class="container mt-3 mb-5">
-    <canvas id="myChart" ></canvas>
-  </div>
-  
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var ctx = document.getElementById('myChart').getContext('2d');
-      var myChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-          labels: [
-            {% for item in cod_data %}
-              '{{ item.first_name }}',
-            {% endfor %}
-          ],
-          datasets: [{
-            label: 'Riport Zote',
-            data: [
-              {% for item in cod_data %}
-                {{ item.some_value }},
-              {% endfor %}
-            ],
-            backgroundColor: ['red', 'blue', 'yellow', 'green', 'purple', 'orange']
-          }]
-        },
-        options: {
-          responsive: true
-        }
+     <script>
+      document.getElementById('add-form-btn').addEventListener('click', function() {
+        window.location.href = '/questionnaire/submit-form/';
       });
-    });
-  </script>
-   {% endcomment %}
- 
-  <div class="row mt-5">
-    <div class="col-md-1"></div>
-    <div class="col-md-11">
-    <table  class="table  table-striped">
-      <h4 class="text-center mb-3"><b>Taarifa Za Shuhuda</b></h4>
+    </script>
+    <div class="col-md-6"></div>
+    <div class="col-md-4">
+      <form id="search-form" class="form-inline">
+        <div class="form-group">
+          <input type="text" id="search-results" class="form-control" placeholder="Tafuta..." onsubmit="searchData(event)">
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <table id="marehemu-table" class="table table-hover">
         <thead>
           <tr>
-            <th>Majina ya Marehemu</th>
+            <th>Jina Kamili</th>
             <th>Mahali</th>
-            <th>Ushahidi</th>
+            <th>Maelezo</th>
             <th>Sababu</th>
+            <th></th>
+            <th></th>
           </tr>
         </thead>
- <tbody>
-    {% for marehemu in combined_data.marehemu_values %}
-    <tr>
-        <td>{{ marehemu.jina_kwanza }} {{ marehemu.jina_pili }} {{ marehemu.jina_mwisho }}</td>
-    
-        <td>{{ marehemu.mahali }}</td>
-        <td>{{ marehemu.maelezo }}</td>
-        <td>
-            {{ marehemu.sababu.sababu }}
-        </td>
-    </tr>
-    {% endfor %}
-</tbody>
-<script src="questionnaire/javascript/search.js"></script>
-</table>
-    
+          <tbody>
+            {% for marehemu in combined_data.marehemu_values %}
+            <tr>
+                <td>{{ marehemu.jina_kwanza }} {{ marehemu.jina_pili }} {{ marehemu.jina_mwisho }}</td>
+                <td>{{ marehemu.mahali }}</td>
+                <td>{{ marehemu.maelezo }}</td>
+                <td>
+                    {{ marehemu.sababu.sababu }}
+                </td>
+                <td><a href="{% url 'questionnaire:badili_sababu' marehemu.id %}"  class="btn btn-secondary text-light">Badili</a></td>
+                <td><a href="{% url 'questionnaire:ondoa_sababu' marehemu.id %}"  class="btn btn-danger text-light">Ondoa</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
+{% comment %} <script src="{% static 'javascript/search.js' %}"></script> {% endcomment %}
+<script src="{static 'javascript/search.js'}"></script>
+{% endif %}
 {% endblock %}

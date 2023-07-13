@@ -1,0 +1,12 @@
+{% extends 'questionnaire/main.html'%}
+
+{% block content %}
+  <h1>Delete Confirmation</h1>
+  <p>Are you sure you want to delete {{ object_to_delete }}?</p>
+  
+  <form method="post">
+    {% csrf_token %}
+    <input type="submit" value="Delete">
+    <a href="{% url 'questionnaire:dashboard' %}">Cancel</a>
+  </form>
+{% endblock %}
